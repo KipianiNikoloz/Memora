@@ -16,7 +16,7 @@ test("user can create and revisit a memory with AI reflection", async ({ page })
   await page.getByLabel("What did I learn?").fill("Directness can be caring when it is grounded.");
   await page.getByLabel("Tags").fill("conversation, courage");
   await page.getByRole("button", { name: "Save to library" }).click();
-  await expect(page.getByText("AI chapter title:")).toBeVisible();
+  await expect(page.getByText(/AI chapter title:/)).toBeVisible();
   await page.getByRole("link", { name: "Back to library" }).click();
   await expect(page.getByRole("heading", { name: "My Library" })).toBeVisible();
   await page.getByPlaceholder("Search by title, lesson, or tag").fill("courage");
@@ -33,4 +33,22 @@ test("insights, settings, and librarian surfaces are reachable", async ({ page }
   await expect(page.getByRole("heading", { name: "AI Librarian" })).toBeVisible();
   await page.getByLabel("What would you like to revisit?").fill("confidence");
   await expect(page.getByRole("link", { name: "Open chapter" })).toBeVisible();
+});
+
+test("mobile header menu exposes app navigation", async ({ page, isMobile }) => {
+  test.skip(!isMobile, "Mobile menu is only shown in mobile project.");
+
+  await page.goto("/");
+  await page.getByRole("button", { name: "Open navigation menu" }).click();
+  await expect(page.getByRole("link", { name: "New Entry" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "AI Librarian" })).toBeVisible();
+
+  await page.getByRole("link", { name: "New Entry" }).click();
+  await expect(page.getByRole("heading", { name: "New Entry" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Open navigation menu" })).toBeVisible();
+
+  await page.getByRole("button", { name: "Open navigation menu" }).click();
+  await expect(page.getByRole("link", { name: "Settings" })).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("link", { name: "Settings" })).toBeHidden();
 });

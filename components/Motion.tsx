@@ -1,6 +1,7 @@
 "use client";
 
-import { AnimatePresence, LazyMotion, MotionConfig, domAnimation, m, useReducedMotion, type Variants } from "motion/react";
+import { AnimatePresence, LazyMotion, MotionConfig, domAnimation, useReducedMotion, type Variants } from "motion/react";
+import * as m from "motion/react-m";
 
 export { AnimatePresence, m, useReducedMotion };
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { MotionItem, MotionList, MotionPanel, m } from "./Motion";
+import { MotionItem, MotionPanel } from "./Motion";
 
 const books = [
   "New beginnings",
@@ -16,23 +16,20 @@ export function LibraryIllustration() {
         <p className="muted">Personal library preview</p>
       </MotionItem>
       <MotionItem className="shelf">
-        <MotionList className="book-row">
+        <div className="book-row">
           {books.map((book, index) => (
-            <m.span
-              animate={{ rotate: index % 2 === 0 ? -1.5 : 1.5 }}
+            <span
               className="book"
-              initial={{ opacity: 0, y: -28, rotate: 0 }}
               key={book}
-              transition={{
-                delay: 0.24 + index * 0.08,
-                duration: 0.46,
-                ease: "easeOut"
-              }}
+              style={{
+                "--book-delay": `${0.18 + index * 0.08}s`,
+                "--book-tilt": `${index % 2 === 0 ? -1.5 : 1.5}deg`
+              } as React.CSSProperties}
             >
               {book}
-            </m.span>
+            </span>
           ))}
-        </MotionList>
+        </div>
       </MotionItem>
       <MotionPanel className="panel" style={{ marginTop: 20 }}>
         <h3>AI Librarian</h3>
