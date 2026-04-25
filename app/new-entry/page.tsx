@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { AppChrome } from "@/components/AppChrome";
 import { useMemora } from "@/components/MemoraClient";
+import { MotionItem, MotionPanel, controlMotion, listVariants, revealVariants, m } from "@/components/Motion";
 import { createEntryFromDraft, type EntryDraft, validateEntryDraft } from "@/lib/validation";
 import { emotions, lifePhases, tones } from "@/lib/types";
 
@@ -46,41 +47,49 @@ export default function NewEntryPage() {
 
   return (
     <AppChrome>
-      <div className="split">
+      <MotionItem className="split">
         <div>
-          <h1 className="app-title">New Entry</h1>
-          <p className="muted">Capture a moment. Reflect. Grow.</p>
-          <form className="form-card" onSubmit={submit}>
-            <label className="field">
+          <MotionItem>
+            <h1 className="app-title">New Entry</h1>
+            <p className="muted">Capture a moment. Reflect. Grow.</p>
+          </MotionItem>
+          <m.form
+            animate="animate"
+            className="form-card"
+            initial="initial"
+            onSubmit={submit}
+            variants={listVariants}
+          >
+            <m.label className="field" variants={revealVariants}>
               <span>Moment title</span>
               <input className="input" value={draft.title} onChange={(event) => update("title", event.target.value)} placeholder="e.g., A small win at work" />
               {errors.title ? <span className="error">{errors.title}</span> : null}
-            </label>
+            </m.label>
 
-            <div className="field">
+            <MotionItem className="field">
               <span>How did you feel?</span>
               <div className="chip-row">
                 {emotions.map((emotion) => (
-                  <button className={`chip ${draft.emotion === emotion ? "chip-active" : ""}`} type="button" key={emotion} onClick={() => update("emotion", emotion)}>
+                  <m.button className={`chip ${draft.emotion === emotion ? "chip-active" : ""}`} type="button" key={emotion} layout {...controlMotion} onClick={() => update("emotion", emotion)}>
                     {emotion}
-                  </button>
+                  </m.button>
                 ))}
               </div>
-            </div>
+            </MotionItem>
 
-            <label className="field">
+            <m.label className="field" variants={revealVariants}>
               <span>What happened?</span>
               <textarea className="textarea" value={draft.memory} onChange={(event) => update("memory", event.target.value)} placeholder="Write a few lines about what happened..." />
               {errors.memory ? <span className="error">{errors.memory}</span> : null}
-            </label>
+            </m.label>
 
-            <label className="field">
+            <m.label className="field" variants={revealVariants}>
               <span>What did I learn?</span>
               <textarea className="textarea" value={draft.lesson} onChange={(event) => update("lesson", event.target.value)} placeholder="What did this moment teach you?" />
               {errors.lesson ? <span className="error">{errors.lesson}</span> : null}
-            </label>
+            </m.label>
 
-            <div className="grid-3">
+            <MotionItem className="grid-3">
               <label className="field">
                 <span>Life phase</span>
                 <select className="select" value={draft.lifePhase} onChange={(event) => update("lifePhase", event.target.value as EntryDraft["lifePhase"])}>
@@ -97,15 +106,19 @@ export default function NewEntryPage() {
                 <span>Tags</span>
                 <input className="input" value={draft.tags} onChange={(event) => update("tags", event.target.value)} placeholder="work, courage" />
               </label>
-            </div>
-            <button className="button button-primary" disabled={saving} type="submit">{saving ? "Organizing your library..." : "Save to library"}</button>
-          </form>
+            </MotionItem>
+            <MotionItem>
+              <m.button className="button button-primary" disabled={saving || !user} type="submit" {...controlMotion}>
+                {saving ? "Organizing your library..." : !user ? "Opening your library..." : "Save to library"}
+              </m.button>
+            </MotionItem>
+          </m.form>
         </div>
-        <aside className="panel">
+        <MotionPanel className="panel">
           <h3>Chapter title after save</h3>
           <p className="muted">The AI librarian will suggest a title and reflection once the entry is saved.</p>
-        </aside>
-      </div>
+        </MotionPanel>
+      </MotionItem>
     </AppChrome>
   );
 }

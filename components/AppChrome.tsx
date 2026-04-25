@@ -4,6 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { AppSidebar } from "./AppSidebar";
 import { useMemora } from "./MemoraClient";
+import { AnimatePresence, MotionPage } from "./Motion";
 import { TopNav } from "./TopNav";
 
 export function AppChrome({ children }: { children: React.ReactNode }) {
@@ -22,10 +23,10 @@ export function AppChrome({ children }: { children: React.ReactNode }) {
       <div className="page-shell">
         <TopNav />
         <main className="section" style={{ maxWidth: 640, margin: "0 auto" }}>
-          <div className="panel">
+          <MotionPage className="panel">
             <h1 className="app-title">Opening your library</h1>
             <p className="muted">{error ?? "Checking your private session..."}</p>
-          </div>
+          </MotionPage>
         </main>
       </div>
     );
@@ -36,7 +37,13 @@ export function AppChrome({ children }: { children: React.ReactNode }) {
       <TopNav />
       <div className="app-layout">
         <AppSidebar />
-        <main className="app-main">{children}</main>
+        <main className="app-main">
+          <AnimatePresence mode="wait">
+            <MotionPage className="motion-page" key={pathname}>
+              {children}
+            </MotionPage>
+          </AnimatePresence>
+        </main>
       </div>
     </div>
   );

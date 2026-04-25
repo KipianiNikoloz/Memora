@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { AppChrome } from "@/components/AppChrome";
 import { useMemora } from "@/components/MemoraClient";
+import { MotionItem, MotionPanel, controlMotion, m } from "@/components/Motion";
 
 export default function EntryDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -16,20 +17,20 @@ export default function EntryDetailPage() {
   if (!entry) {
     return (
       <AppChrome>
-        <div className="panel">
+        <MotionPanel className="panel">
           <h1 className="app-title">Entry not found</h1>
           <p className="muted">We could not find that chapter in your library.</p>
-          <Link className="button button-primary" href="/library">Back to library</Link>
-        </div>
+          <m.span {...controlMotion}><Link className="button button-primary" href="/library">Back to library</Link></m.span>
+        </MotionPanel>
       </AppChrome>
     );
   }
 
   return (
     <AppChrome>
-      <div className="split">
-        <article className="form-card">
-          <p className="muted">{entry.lifePhase} · {entry.emotion} · {entry.eventDate}</p>
+      <MotionItem className="split">
+        <MotionPanel className="form-card">
+          <p className="muted">{entry.lifePhase} - {entry.emotion} - {entry.eventDate}</p>
           <h1 className="app-title">{entry.title}</h1>
           {entry.aiTitle ? <p><strong>AI chapter title:</strong> {entry.aiTitle}</p> : null}
           <h3 className="display">What happened</h3>
@@ -40,10 +41,11 @@ export default function EntryDetailPage() {
             {entry.tags.map((tag) => <span className="chip" key={tag}>{tag}</span>)}
           </div>
           <div className="row" style={{ marginTop: 24 }}>
-            <Link className="button button-secondary" href="/library">Back to library</Link>
-            <button
+            <m.span {...controlMotion}><Link className="button button-secondary" href="/library">Back to library</Link></m.span>
+            <m.button
               className="button button-ghost"
               disabled={deleting}
+              {...controlMotion}
               onClick={async () => {
                 setDeleting(true);
                 try {
@@ -55,16 +57,16 @@ export default function EntryDetailPage() {
               }}
             >
               {deleting ? "Deleting..." : "Delete entry"}
-            </button>
+            </m.button>
           </div>
           {error ? <p className="error">{error}</p> : null}
-        </article>
-        <aside className="panel">
+        </MotionPanel>
+        <MotionPanel className="panel">
           <h3>AI Librarian</h3>
           <p className="muted">{entry.aiResponse}</p>
-          <Link className="button button-secondary" href="/librarian">Ask for another reflection</Link>
-        </aside>
-      </div>
+          <m.span {...controlMotion}><Link className="button button-secondary" href="/librarian">Ask for another reflection</Link></m.span>
+        </MotionPanel>
+      </MotionItem>
     </AppChrome>
   );
 }

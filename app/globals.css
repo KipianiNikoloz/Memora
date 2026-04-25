@@ -93,6 +93,12 @@ button {
   border: 1px solid rgba(227, 178, 71, 0.8);
   border-radius: 50%;
   background: #ffe7af;
+  transition: transform 220ms ease, box-shadow 220ms ease;
+}
+
+.brand:hover .brand-mark {
+  transform: rotate(-3deg) translateY(-1px);
+  box-shadow: 0 8px 24px rgba(111, 36, 30, 0.12);
 }
 
 .nav-links {
@@ -101,6 +107,34 @@ button {
   gap: 18px;
   color: var(--muted);
   font-size: 14px;
+}
+
+.nav-link,
+.sidebar-link {
+  position: relative;
+}
+
+.nav-link::after,
+.sidebar-link::after {
+  position: absolute;
+  right: 10px;
+  bottom: 6px;
+  left: 10px;
+  height: 2px;
+  border-radius: 999px;
+  background: currentColor;
+  content: "";
+  opacity: 0;
+  transform: scaleX(0.45);
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.nav-link:hover::after,
+.nav-link-active::after,
+.sidebar-link:hover::after,
+.sidebar-link-active::after {
+  opacity: 0.42;
+  transform: scaleX(1);
 }
 
 .button {
@@ -113,11 +147,23 @@ button {
   border-radius: 8px;
   padding: 10px 16px;
   font-weight: 800;
-  transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
+  transition: transform 180ms ease, background 180ms ease, border-color 180ms ease, box-shadow 180ms ease, opacity 180ms ease;
 }
 
 .button:hover {
   transform: translateY(-1px);
+}
+
+.button:disabled,
+.chip:disabled {
+  cursor: not-allowed;
+  opacity: 0.62;
+  transform: none;
+}
+
+.button:disabled:hover,
+.chip:disabled:hover {
+  transform: none;
 }
 
 .button-primary {
@@ -276,6 +322,7 @@ button {
 }
 
 .sidebar a {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -284,10 +331,16 @@ button {
   padding: 12px;
   color: var(--burgundy);
   font-weight: 800;
+  transition: background 180ms ease, color 180ms ease, transform 180ms ease;
 }
 
 .sidebar a:hover {
   background: rgba(227, 178, 71, 0.18);
+}
+
+.sidebar-link-active {
+  background: rgba(227, 178, 71, 0.24);
+  color: var(--ink);
 }
 
 .app-main {
@@ -310,6 +363,15 @@ button {
   background: rgba(255, 248, 234, 0.85);
   color: var(--ink);
   padding: 12px 14px;
+  transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
+}
+
+.input:focus,
+.textarea:focus,
+.select:focus {
+  border-color: rgba(76, 124, 142, 0.72);
+  box-shadow: 0 0 0 4px rgba(76, 124, 142, 0.12);
+  outline: none;
 }
 
 .textarea {
@@ -353,12 +415,14 @@ button {
   padding: 8px 12px;
   font-size: 13px;
   font-weight: 800;
+  transition: transform 180ms ease, background 180ms ease, border-color 180ms ease, color 180ms ease, box-shadow 180ms ease, opacity 180ms ease;
 }
 
 .chip-active {
   border-color: var(--burgundy);
   background: var(--burgundy);
   color: #fff9ec;
+  box-shadow: 0 8px 22px rgba(111, 36, 30, 0.14);
 }
 
 .entry-grid {
@@ -370,6 +434,11 @@ button {
 .entry-card {
   min-height: 190px;
   border-left: 10px solid var(--terracotta);
+  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.entry-card:hover {
+  box-shadow: 0 24px 60px rgba(70, 26, 20, 0.15);
 }
 
 .entry-card[data-emotion="Proud"],
@@ -408,12 +477,34 @@ button {
   overflow: hidden;
 }
 
-.bar span:nth-child(2)::before {
-  display: block;
-  width: var(--value);
-  height: 100%;
-  content: "";
-  background: var(--teal);
+.motion-page {
+  min-width: 0;
+}
+
+.motion-stack {
+  display: grid;
+  gap: 18px;
+}
+
+.motion-collapsible {
+  overflow: hidden;
+}
+
+.inline-icon-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 1ms !important;
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+  }
 }
 
 @media (max-width: 880px) {

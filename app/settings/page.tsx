@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { AppChrome } from "@/components/AppChrome";
 import { useMemora } from "@/components/MemoraClient";
+import { AnimatePresence, MotionItem, MotionList, MotionPanel, controlMotion, m } from "@/components/Motion";
 import { tones, type Tone } from "@/lib/types";
 
 export default function SettingsPage() {
@@ -21,41 +22,52 @@ export default function SettingsPage() {
 
   return (
     <AppChrome>
-      <h1 className="app-title">Settings</h1>
-      <p className="muted">Privacy, preferences, and boundaries for your library.</p>
+      <MotionItem>
+        <h1 className="app-title">Settings</h1>
+        <p className="muted">Privacy, preferences, and boundaries for your library.</p>
+      </MotionItem>
       {error ? <p className="error">{error}</p> : null}
 
-      <div className="grid-3" style={{ marginTop: 22 }}>
-        <section className="panel">
+      <MotionList className="grid-3" style={{ marginTop: 22 }}>
+        <MotionPanel className="panel">
           <h3>AI tone default</h3>
           <p className="muted">You can still override tone on each interaction.</p>
           <div className="chip-row">
             {tones.map((tone) => (
-              <button className={`chip ${user?.defaultTone === tone ? "chip-active" : ""}`} disabled={savingTone === tone} key={tone} type="button" onClick={() => void chooseTone(tone as Tone)}>
+              <m.button className={`chip ${user?.defaultTone === tone ? "chip-active" : ""}`} disabled={savingTone === tone} key={tone} layout type="button" {...controlMotion} onClick={() => void chooseTone(tone as Tone)}>
                 {savingTone === tone ? "Saving..." : tone}
-              </button>
+              </m.button>
             ))}
           </div>
-        </section>
+        </MotionPanel>
 
-        <section className="panel">
+        <MotionPanel className="panel">
           <h3>Privacy</h3>
           <p className="muted">Memories are private by default. Demo mode stores entries in this browser; Supabase mode enforces user ownership with RLS.</p>
-          <button className="button button-secondary" type="button" onClick={() => setExportText(exportEntries())}>Export entries</button>
-        </section>
+          <m.button className="button button-secondary" type="button" {...controlMotion} onClick={() => setExportText(exportEntries())}>Export entries</m.button>
+        </MotionPanel>
 
-        <section className="panel">
+        <MotionPanel className="panel">
           <h3>Wellness boundary</h3>
           <p className="muted">Memora supports reflection. It does not diagnose, treat, or replace emergency or clinical support.</p>
-        </section>
-      </div>
+        </MotionPanel>
+      </MotionList>
 
-      {exportText ? (
-        <section className="panel" style={{ marginTop: 22 }}>
-          <h3>Export preview</h3>
-          <textarea className="textarea" readOnly value={exportText} style={{ minHeight: 260 }} />
-        </section>
-      ) : null}
+      <AnimatePresence>
+        {exportText ? (
+          <m.section
+            animate={{ opacity: 1, height: "auto", y: 0 }}
+            className="panel motion-collapsible"
+            exit={{ opacity: 0, height: 0, y: -8 }}
+            initial={{ opacity: 0, height: 0, y: -8 }}
+            style={{ marginTop: 22 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+          >
+            <h3>Export preview</h3>
+            <textarea className="textarea" readOnly value={exportText} style={{ minHeight: 260 }} />
+          </m.section>
+        ) : null}
+      </AnimatePresence>
     </AppChrome>
   );
 }
