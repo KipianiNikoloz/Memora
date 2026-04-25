@@ -1,21 +1,8 @@
-export type Emotion =
-  | "Happy"
-  | "Stressed"
-  | "Proud"
-  | "Disappointed"
-  | "Grateful"
-  | "Anxious"
-  | "Frustrated"
-  | "Other";
+export type Emotion = "Happy" | "Stressed" | "Proud" | "Disappointed" | "Grateful" | "Anxious" | "Frustrated" | "Other";
 
 export type Tone = "Motivational" | "Humorous" | "Wise";
 
-export type LifePhase =
-  | "New Beginnings"
-  | "Growth and Learning"
-  | "Relationships"
-  | "Challenges"
-  | "Milestones";
+export type LifePhase = "New Beginnings" | "Growth and Learning" | "Relationships" | "Challenges" | "Milestones";
 
 export type MemoryEntry = {
   id: string;
@@ -48,7 +35,7 @@ export const emotions: Emotion[] = [
   "Grateful",
   "Anxious",
   "Frustrated",
-  "Other"
+  "Other",
 ];
 
 export const tones: Tone[] = ["Motivational", "Humorous", "Wise"];
@@ -58,5 +45,5 @@ export const lifePhases: LifePhase[] = [
   "Growth and Learning",
   "Relationships",
   "Challenges",
-  "Milestones"
+  "Milestones",
 ];

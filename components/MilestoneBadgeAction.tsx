@@ -34,7 +34,12 @@ export function MilestoneBadgeAction({ entry, compact = false }: MilestoneBadgeA
       {demoBadgeWallet ? (
         <p className="muted badge-wallet">Demo wallet: {demoBadgeWallet.address}</p>
       ) : (
-        <m.button className="button button-secondary" type="button" {...controlMotion} onClick={() => void createDemoBadgeWallet()}>
+        <m.button
+          className="button button-secondary"
+          type="button"
+          {...controlMotion}
+          onClick={() => void createDemoBadgeWallet()}
+        >
           Create testnet wallet
         </m.button>
       )}
@@ -52,8 +57,16 @@ export function MilestoneBadgeAction({ entry, compact = false }: MilestoneBadgeA
       {badge?.error ? <p className="error">{badge.error}</p> : null}
       {issued ? (
         <div className="badge-links">
-          {publicXrplNftUrl(badge.nftokenId) ? <a href={publicXrplNftUrl(badge.nftokenId)} rel="noreferrer" target="_blank">View NFT</a> : null}
-          {publicXrplTxUrl(badge.acceptTxHash) ? <a href={publicXrplTxUrl(badge.acceptTxHash)} rel="noreferrer" target="_blank">View transfer</a> : null}
+          {publicXrplNftUrl(badge.nftokenId) ? (
+            <a href={publicXrplNftUrl(badge.nftokenId)} rel="noreferrer" target="_blank">
+              View NFT
+            </a>
+          ) : null}
+          {publicXrplTxUrl(badge.acceptTxHash) ? (
+            <a href={publicXrplTxUrl(badge.acceptTxHash)} rel="noreferrer" target="_blank">
+              View transfer
+            </a>
+          ) : null}
         </div>
       ) : null}
     </div>

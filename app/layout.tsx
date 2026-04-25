@@ -4,7 +4,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Memora",
-  description: "Every life deserves a library."
+  description: "Every life deserves a library.",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

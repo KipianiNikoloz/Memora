@@ -25,14 +25,14 @@ export async function callGoogleGenAi({ apiKey, model, prompt, timeoutMs }: Goog
           properties: {
             text: {
               type: Type.STRING,
-              description: "The user-facing Memora AI Librarian response."
-            }
+              description: "The user-facing Memora AI Librarian response.",
+            },
           },
           required: ["text"],
-          propertyOrdering: ["text"]
+          propertyOrdering: ["text"],
         },
-        temperature: 0.6
-      }
+        temperature: 0.6,
+      },
     });
 
     const parsed = JSON.parse(response.text ?? "{}") as { text?: unknown };

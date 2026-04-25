@@ -12,20 +12,20 @@ export const pageVariants: Variants = {
   animate: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.38, ease: softEase }
+    transition: { duration: 0.38, ease: softEase },
   },
   exit: {
     opacity: 0,
     y: -8,
-    transition: { duration: 0.18, ease: softEase }
-  }
+    transition: { duration: 0.18, ease: softEase },
+  },
 };
 
 export const listVariants: Variants = {
   initial: {},
   animate: {
-    transition: { staggerChildren: 0.065, delayChildren: 0.04 }
-  }
+    transition: { staggerChildren: 0.065, delayChildren: 0.04 },
+  },
 };
 
 export const revealVariants: Variants = {
@@ -33,13 +33,13 @@ export const revealVariants: Variants = {
   animate: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.42, ease: softEase }
+    transition: { duration: 0.42, ease: softEase },
   },
   exit: {
     opacity: 0,
     y: 8,
-    transition: { duration: 0.18, ease: softEase }
-  }
+    transition: { duration: 0.18, ease: softEase },
+  },
 };
 
 export const panelVariants: Variants = {
@@ -48,14 +48,14 @@ export const panelVariants: Variants = {
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: { duration: 0.36, ease: softEase }
+    transition: { duration: 0.36, ease: softEase },
   },
   exit: {
     opacity: 0,
     y: 10,
     scale: 0.99,
-    transition: { duration: 0.18, ease: softEase }
-  }
+    transition: { duration: 0.18, ease: softEase },
+  },
 };
 
 export const cardVariants: Variants = {
@@ -63,33 +63,31 @@ export const cardVariants: Variants = {
   animate: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.3, ease: softEase }
+    transition: { duration: 0.3, ease: softEase },
   },
   exit: {
     opacity: 0,
     y: 8,
-    transition: { duration: 0.18, ease: softEase }
-  }
+    transition: { duration: 0.18, ease: softEase },
+  },
 };
 
 export const controlMotion = {
   whileHover: { y: -1 },
   whileTap: { y: 0, scale: 0.985 },
-  transition: { duration: 0.18, ease: softEase }
+  transition: { duration: 0.18, ease: softEase },
 };
 
 export const cardMotion = {
   whileHover: { y: -3 },
   whileTap: { y: -1, scale: 0.995 },
-  transition: { duration: 0.2, ease: softEase }
+  transition: { duration: 0.2, ease: softEase },
 };
 
 export function MotionProvider({ children }: { children: React.ReactNode }) {
   return (
     <LazyMotion features={domAnimation} strict>
-      <MotionConfig reducedMotion="user">
-        {children}
-      </MotionConfig>
+      <MotionConfig reducedMotion="user">{children}</MotionConfig>
     </LazyMotion>
   );
 }
@@ -98,13 +96,7 @@ type MotionDivProps = React.ComponentProps<typeof m.div>;
 
 export function MotionPage({ children, ...props }: MotionDivProps) {
   return (
-    <m.div
-      initial="initial"
-      animate="animate"
-      exit="exit"
-      variants={pageVariants}
-      {...props}
-    >
+    <m.div initial="initial" animate="animate" exit="exit" variants={pageVariants} {...props}>
       {children}
     </m.div>
   );
@@ -112,12 +104,7 @@ export function MotionPage({ children, ...props }: MotionDivProps) {
 
 export function MotionList({ children, ...props }: MotionDivProps) {
   return (
-    <m.div
-      initial="initial"
-      animate="animate"
-      variants={listVariants}
-      {...props}
-    >
+    <m.div initial="initial" animate="animate" variants={listVariants} {...props}>
       {children}
     </m.div>
   );
@@ -125,13 +112,7 @@ export function MotionList({ children, ...props }: MotionDivProps) {
 
 export function MotionPanel({ children, ...props }: MotionDivProps) {
   return (
-    <m.div
-      initial="initial"
-      animate="animate"
-      exit="exit"
-      variants={panelVariants}
-      {...props}
-    >
+    <m.div initial="initial" animate="animate" exit="exit" variants={panelVariants} {...props}>
       {children}
     </m.div>
   );
@@ -139,13 +120,7 @@ export function MotionPanel({ children, ...props }: MotionDivProps) {
 
 export function MotionItem({ children, ...props }: MotionDivProps) {
   return (
-    <m.div
-      initial="initial"
-      animate="animate"
-      exit="exit"
-      variants={cardVariants}
-      {...props}
-    >
+    <m.div initial="initial" animate="animate" exit="exit" variants={cardVariants} {...props}>
       {children}
     </m.div>
   );

@@ -15,13 +15,13 @@ export default defineConfig({
         statements: 75,
         branches: 70,
         functions: 75,
-        lines: 75
-      }
-    }
+        lines: 75,
+      },
+    },
   },
   resolve: {
     alias: {
-      "@": new URL(".", import.meta.url).pathname
-    }
-  }
+      "@": new URL(".", import.meta.url).pathname,
+    },
+  },
 });

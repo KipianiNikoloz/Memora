@@ -81,10 +81,13 @@ export function runMockAiTask(task: AiTask, request: LibrarianRequest): string {
     return "The shelves are still quiet. Add a few memories and Memora will help you notice patterns gently.";
   }
   const proud = request.entries.filter((entry) => entry.emotion === "Proud").length;
-  const stressed = request.entries.filter((entry) => entry.emotion === "Stressed" || entry.emotion === "Anxious").length;
-  const base = proud >= stressed
-    ? "Your recent library leans toward momentum and earned confidence."
-    : "Your recent library carries some pressure, but also evidence that you keep moving through it.";
+  const stressed = request.entries.filter(
+    (entry) => entry.emotion === "Stressed" || entry.emotion === "Anxious",
+  ).length;
+  const base =
+    proud >= stressed
+      ? "Your recent library leans toward momentum and earned confidence."
+      : "Your recent library carries some pressure, but also evidence that you keep moving through it.";
   return `${base} ${toneLine(request.tone, request.entries[0])}`;
 }
 
@@ -100,5 +103,5 @@ export const mockAiLibrarian: AiLibrarian = {
   },
   async summarize(request) {
     return runMockAiTask("summarize", request);
-  }
+  },
 };

@@ -1,10 +1,6 @@
 import { XRPL_TESTNET_SERVER } from "./xrpl-badges";
 
-const issuerSeedEnvNames = [
-  "XRPL_TESTNET_ISSUER_SEED",
-  "XRPL_TESTNET_SEED",
-  "XRPL_ISSUER_SEED"
-] as const;
+const issuerSeedEnvNames = ["XRPL_TESTNET_ISSUER_SEED", "XRPL_TESTNET_SEED", "XRPL_ISSUER_SEED"] as const;
 
 type XrplEnv = Partial<Record<string, string | undefined>>;
 

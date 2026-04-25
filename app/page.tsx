@@ -12,19 +12,29 @@ export default function HomePage() {
       <TopNav />
       <MotionPage className="hero">
         <MotionList>
-          <p className="muted" style={{ fontWeight: 900 }}>Personal reflection library</p>
+          <p className="muted" style={{ fontWeight: 900 }}>
+            Personal reflection library
+          </p>
           <MotionItem>
             <h1>Every life deserves a library.</h1>
           </MotionItem>
           <MotionItem>
             <p>
-            Turn your memories into structured knowledge. Store meaningful moments,
-            reflect on what they taught you, and revisit your growth with a supportive AI librarian.
+              Turn your memories into structured knowledge. Store meaningful moments, reflect on what they taught you,
+              and revisit your growth with a supportive AI librarian.
             </p>
           </MotionItem>
           <MotionItem className="hero-actions">
-            <m.span {...controlMotion}><Link className="button button-primary" href="/auth">Start your library</Link></m.span>
-            <m.span {...controlMotion}><Link className="button button-secondary" href="#how">See how it works</Link></m.span>
+            <m.span {...controlMotion}>
+              <Link className="button button-primary" href="/auth">
+                Start your library
+              </Link>
+            </m.span>
+            <m.span {...controlMotion}>
+              <Link className="button button-secondary" href="#how">
+                See how it works
+              </Link>
+            </m.span>
           </MotionItem>
         </MotionList>
         <LibraryIllustration />
@@ -39,11 +49,15 @@ export default function HomePage() {
           </MotionPanel>
           <MotionPanel className="card">
             <h3>Reflect</h3>
-            <p className="muted">Write what happened and what it taught you without turning the product into homework.</p>
+            <p className="muted">
+              Write what happened and what it taught you without turning the product into homework.
+            </p>
           </MotionPanel>
           <MotionPanel className="card">
             <h3>Revisit</h3>
-            <p className="muted">Return to old chapters and compare yourself to your past self, not to everyone else.</p>
+            <p className="muted">
+              Return to old chapters and compare yourself to your past self, not to everyone else.
+            </p>
           </MotionPanel>
         </MotionList>
       </MotionPage>
@@ -53,8 +67,8 @@ export default function HomePage() {
           <MotionItem>
             <h2>A calm library, not a clinical dashboard.</h2>
             <p className="muted">
-              Memora keeps emotional data private and user-controlled. AI guidance is supportive and reflective,
-              never diagnostic or therapeutic.
+              Memora keeps emotional data private and user-controlled. AI guidance is supportive and reflective, never
+              diagnostic or therapeutic.
             </p>
             <div className="about-books" aria-hidden="true">
               <span className="about-book about-book-long" />
@@ -64,7 +78,9 @@ export default function HomePage() {
           </MotionItem>
           <MotionPanel className="tone-panel">
             <div className="tone-panel-header">
-              <span className="tone-icon" aria-hidden="true"><Sparkles size={18} /></span>
+              <span className="tone-icon" aria-hidden="true">
+                <Sparkles size={18} />
+              </span>
               <div>
                 <p className="tone-kicker">AI Librarian tones</p>
                 <h3>Choose the voice your memories answer in.</h3>

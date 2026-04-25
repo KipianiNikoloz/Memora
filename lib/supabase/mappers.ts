@@ -75,7 +75,7 @@ export function mapMemoryEntryRow(row: MemoryEntryRow): MemoryEntry {
     updatedAt: row.updated_at,
     aiTone: row.ai_tone as Tone,
     aiTitle: row.ai_title ?? undefined,
-    aiResponse: row.ai_response ?? undefined
+    aiResponse: row.ai_response ?? undefined,
   };
 }
 
@@ -94,7 +94,7 @@ export function mapMemoryEntryToRow(entry: MemoryEntry): MemoryEntryInsert {
     ai_title: entry.aiTitle ?? null,
     ai_response: entry.aiResponse ?? null,
     created_at: entry.createdAt,
-    updated_at: entry.updatedAt
+    updated_at: entry.updatedAt,
   };
 }
 
@@ -102,7 +102,7 @@ export function mapProfileRow(row: MemoraProfileRow): UserProfile {
   return {
     id: row.id,
     email: row.email,
-    defaultTone: row.default_tone as Tone
+    defaultTone: row.default_tone as Tone,
   };
 }
 
@@ -110,7 +110,7 @@ export function mapProfileToUpsert(profile: UserProfile): MemoraProfileUpsert {
   return {
     id: profile.id,
     email: profile.email,
-    default_tone: profile.defaultTone
+    default_tone: profile.defaultTone,
   };
 }
 
@@ -131,7 +131,7 @@ export function mapBadgeRow(row: XrplMilestoneBadgeRow): MilestoneBadge {
     issuedAt: row.issued_at ?? undefined,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
-    error: row.error ?? undefined
+    error: row.error ?? undefined,
   };
 }
 
@@ -152,6 +152,6 @@ export function mapBadgeToUpsert(badge: MilestoneBadge): XrplMilestoneBadgeUpser
     issued_at: badge.issuedAt ?? null,
     created_at: badge.createdAt,
     updated_at: badge.updatedAt,
-    error: badge.error ?? null
+    error: badge.error ?? null,
   };
 }

@@ -8,7 +8,7 @@ This index connects the product knowledge base, implementation docs, testing gui
 - [System Architecture](architecture/system.md)
 - [Testing Strategy](testing.md)
 - [Demo Runbook](demo-runbook.md)
-- [Technical Architecture Deck](../static/Memora_Technical_Deck.pdf)
+- [Technical Architecture Deck](../static/Memora_Technical_Architecture_Deck.pdf)
 
 ## Feature Docs
 

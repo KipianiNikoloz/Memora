@@ -14,7 +14,7 @@ describe("private data ownership", () => {
       emotion: "Proud" as const,
       tags: "privacy",
       lifePhase: "Milestones" as const,
-      aiTone: "Wise" as const
+      aiTone: "Wise" as const,
     };
     const userOne = createEntryFromDraft(draft, "user-one");
     const userTwo = createEntryFromDraft({ ...draft, title: "Other chapter" }, "user-two");

@@ -2,12 +2,7 @@
 
 import { MotionItem, MotionPanel } from "./Motion";
 
-const books = [
-  "New beginnings",
-  "Growth",
-  "Challenges",
-  "Gratitude"
-];
+const books = ["New beginnings", "Growth", "Challenges", "Gratitude"];
 
 export function LibraryIllustration() {
   return (
@@ -21,10 +16,12 @@ export function LibraryIllustration() {
             <span
               className="book"
               key={book}
-              style={{
-                "--book-delay": `${0.18 + index * 0.08}s`,
-                "--book-tilt": `${index % 2 === 0 ? -1.5 : 1.5}deg`
-              } as React.CSSProperties}
+              style={
+                {
+                  "--book-delay": `${0.18 + index * 0.08}s`,
+                  "--book-tilt": `${index % 2 === 0 ? -1.5 : 1.5}deg`,
+                } as React.CSSProperties
+              }
             >
               {book}
             </span>

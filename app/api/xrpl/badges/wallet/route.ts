@@ -10,6 +10,6 @@ export async function POST() {
     address: wallet.address,
     seed: wallet.seed,
     network: "testnet",
-    createdAt: new Date().toISOString()
+    createdAt: new Date().toISOString(),
   });
 }

@@ -6,6 +6,7 @@ import { AppChrome } from "@/components/AppChrome";
 import { useMemora } from "@/components/MemoraClient";
 import { AnimatePresence, MotionItem, MotionPanel, controlMotion, m } from "@/components/Motion";
 import { requestAiLibrarian } from "@/lib/ai-client";
+import { findLibrarianMatch, selectLibrarianRequest } from "@/lib/library-selectors";
 import { tones, type Tone } from "@/lib/types";
 
 export default function LibrarianPage() {
@@ -13,23 +14,15 @@ export default function LibrarianPage() {
   const [tone, setTone] = useState<Tone>(user?.defaultTone ?? "Wise");
   const [query, setQuery] = useState("");
 
-  const matched = useMemo(() => {
-    if (!query.trim()) return entries[0];
-    const needle = query.toLowerCase();
-    return entries.find((entry) => `${entry.title} ${entry.memory} ${entry.lesson} ${entry.tags.join(" ")}`.toLowerCase().includes(needle)) ?? entries[0];
-  }, [entries, query]);
+  const matched = useMemo(() => findLibrarianMatch(entries, query), [entries, query]);
 
-  const [response, setResponse] = useState("Your first shelf is waiting. Add one memory and the library can begin reflecting back.");
+  const [response, setResponse] = useState(
+    "Your first shelf is waiting. Add one memory and the library can begin reflecting back.",
+  );
 
   useEffect(() => {
     let active = true;
-    const request = query.trim()
-      ? {
-        entry: { title: "Support note", memory: query, lesson: "", emotion: "Stressed" as const, lifePhase: "Challenges" as const, tags: [] },
-        tone
-      }
-      : { entries: matched ? [matched] : entries, tone };
-    const task = query.trim() ? "reflect" : "revisitPrompt";
+    const { request, task } = selectLibrarianRequest(entries, query, tone);
 
     void requestAiLibrarian(task, request).then((result) => {
       if (active) setResponse(result.text);
@@ -50,13 +43,25 @@ export default function LibrarianPage() {
           <MotionPanel className="form-card">
             <label className="field">
               <span>What would you like to revisit?</span>
-              <input className="input" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="confidence, support, new beginnings..." />
+              <input
+                className="input"
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder="confidence, support, new beginnings..."
+              />
             </label>
             <div className="field">
               <span>Tone</span>
               <div className="chip-row">
                 {tones.map((item) => (
-                  <m.button key={item} type="button" layout className={`chip ${tone === item ? "chip-active" : ""}`} {...controlMotion} onClick={() => setTone(item)}>
+                  <m.button
+                    key={item}
+                    type="button"
+                    layout
+                    className={`chip ${tone === item ? "chip-active" : ""}`}
+                    {...controlMotion}
+                    onClick={() => setTone(item)}
+                  >
                     {item}
                   </m.button>
                 ))}
@@ -80,11 +85,15 @@ export default function LibrarianPage() {
           <AnimatePresence mode="wait">
             {matched ? (
               <m.span key="matched" {...controlMotion}>
-                <Link className="button button-secondary" href={`/entry/${matched.id}`}>Open chapter</Link>
+                <Link className="button button-secondary" href={`/entry/${matched.id}`}>
+                  Open chapter
+                </Link>
               </m.span>
             ) : (
               <m.span key="empty" {...controlMotion}>
-                <Link className="button button-primary" href="/new-entry">Add your first entry</Link>
+                <Link className="button button-primary" href="/new-entry">
+                  Add your first entry
+                </Link>
               </m.span>
             )}
           </AnimatePresence>

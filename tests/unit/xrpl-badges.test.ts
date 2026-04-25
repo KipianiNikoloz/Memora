@@ -18,7 +18,7 @@ describe("XRPL milestone badges", () => {
       name: "Memora Milestone Badge",
       category: "Proud",
       eventDate: seedEntries[0].eventDate,
-      issuer: "Memora"
+      issuer: "Memora",
     });
     expect(uri).not.toContain(seedEntries[0].memory);
     expect(uri).not.toContain(seedEntries[0].lesson);
@@ -35,32 +35,32 @@ describe("XRPL milestone badges", () => {
       entryId: "entry-1",
       status: "pending",
       recipientAddress: "rRecipient",
-      createdAt: "2026-04-25T12:00:00.000Z"
+      createdAt: "2026-04-25T12:00:00.000Z",
     });
   });
 
   it("builds non-transferable mint and zero-XRP destination offer transactions", () => {
     const mint = buildMilestoneNFTokenMint({
       account: "rIssuer",
-      metadataUri: "data:application/json,%7B%7D"
+      metadataUri: "data:application/json,%7B%7D",
     });
     const offer = buildDestinationSellOffer({
       account: "rIssuer",
       nftokenId: "00080000ABC",
-      destination: "rRecipient"
+      destination: "rRecipient",
     });
 
     expect(mint).toMatchObject({
       TransactionType: "NFTokenMint",
       Account: "rIssuer",
-      URI: stringToHex("data:application/json,%7B%7D")
+      URI: stringToHex("data:application/json,%7B%7D"),
     });
     expect(mint).not.toHaveProperty("Flags");
     expect(offer).toMatchObject({
       TransactionType: "NFTokenCreateOffer",
       Amount: "0",
       Destination: "rRecipient",
-      Flags: 1
+      Flags: 1,
     });
   });
 });

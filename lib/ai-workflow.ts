@@ -7,7 +7,7 @@ import {
   hasCrisisLikeInput,
   requestText,
   runMockAiTask,
-  safetyResponse
+  safetyResponse,
 } from "./ai";
 import { buildAiPrompt, validateAiText } from "./ai-prompts";
 
@@ -29,7 +29,7 @@ const AiWorkflowAnnotation = Annotation.Root({
   fallbackUsed: Annotation<boolean>(),
   shouldFallback: Annotation<boolean>(),
   stoppedForSafety: Annotation<boolean>(),
-  error: Annotation<string | undefined>()
+  error: Annotation<string | undefined>(),
 });
 
 type AiWorkflowState = typeof AiWorkflowAnnotation.State;
@@ -42,7 +42,11 @@ function routeAfterValidation(state: AiWorkflowState) {
   return state.shouldFallback ? "fallbackToMock" : END;
 }
 
-export async function runAiWorkflow(task: AiTask, request: LibrarianRequest, options: AiWorkflowOptions): Promise<AiResult> {
+export async function runAiWorkflow(
+  task: AiTask,
+  request: LibrarianRequest,
+  options: AiWorkflowOptions,
+): Promise<AiResult> {
   const safetyGate = (state: AiWorkflowState) => {
     if (!hasCrisisLikeInput(requestText(state.request))) return {};
     return {
@@ -50,12 +54,12 @@ export async function runAiWorkflow(task: AiTask, request: LibrarianRequest, opt
       provider: "mock" as AiProvider,
       fallbackUsed: false,
       shouldFallback: false,
-      stoppedForSafety: true
+      stoppedForSafety: true,
     };
   };
 
   const buildPrompt = (state: AiWorkflowState) => ({
-    prompt: buildAiPrompt(state.task, state.request)
+    prompt: buildAiPrompt(state.task, state.request),
   });
 
   const callModel = async (state: AiWorkflowState) => {
@@ -70,12 +74,12 @@ export async function runAiWorkflow(task: AiTask, request: LibrarianRequest, opt
         provider: "google" as AiProvider,
         model: options.model,
         fallbackUsed: false,
-        shouldFallback: false
+        shouldFallback: false,
       };
     } catch (cause) {
       return {
         error: cause instanceof Error ? cause.message : "Live AI failed.",
-        shouldFallback: true
+        shouldFallback: true,
       };
     }
   };
@@ -94,7 +98,7 @@ export async function runAiWorkflow(task: AiTask, request: LibrarianRequest, opt
     provider: "mock" as AiProvider,
     model: undefined,
     fallbackUsed: true,
-    shouldFallback: false
+    shouldFallback: false,
   });
 
   const graph = new StateGraph(AiWorkflowAnnotation)
@@ -121,13 +125,13 @@ export async function runAiWorkflow(task: AiTask, request: LibrarianRequest, opt
     fallbackUsed: false,
     shouldFallback: false,
     stoppedForSafety: false,
-    error: undefined
+    error: undefined,
   });
 
   return {
     text: result.text || runMockAiTask(task, request),
     provider: result.provider ?? "mock",
     model: result.provider === "google" ? result.model : undefined,
-    fallbackUsed: result.fallbackUsed ?? result.provider !== "google"
+    fallbackUsed: result.fallbackUsed ?? result.provider !== "google",
   };
 }

@@ -44,7 +44,7 @@ export function validateEntryDraft(draft: EntryDraft): ValidationResult {
 
   return {
     ok: Object.keys(errors).length === 0,
-    errors
+    errors,
   };
 }
 
@@ -71,6 +71,6 @@ export function createEntryFromDraft(draft: EntryDraft, userId: string): MemoryE
     eventDate: now.slice(0, 10),
     createdAt: now,
     updatedAt: now,
-    aiTone: draft.aiTone
+    aiTone: draft.aiTone,
   };
 }

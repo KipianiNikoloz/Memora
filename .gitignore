@@ -7,8 +7,6 @@ test-results
 tsconfig.tsbuildinfo
 .env
 .env.local
+.env*.local
 dist
 supabase/.temp
-
-.vercel
-.env*.local

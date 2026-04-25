@@ -8,11 +8,16 @@ import { controlMotion, m } from "./Motion";
 export function AppSidebar() {
   const pathname = usePathname();
   const links = [
-    { href: "/library", label: "Library", icon: BookOpen, active: pathname.startsWith("/library") || pathname.startsWith("/entry") },
+    {
+      href: "/library",
+      label: "Library",
+      icon: BookOpen,
+      active: pathname.startsWith("/library") || pathname.startsWith("/entry"),
+    },
     { href: "/new-entry", label: "New Entry", icon: Plus, active: pathname.startsWith("/new-entry") },
     { href: "/insights", label: "Insights", icon: BarChart3, active: pathname.startsWith("/insights") },
     { href: "/librarian", label: "AI Librarian", icon: Sparkles, active: pathname.startsWith("/librarian") },
-    { href: "/settings", label: "Settings", icon: Settings, active: pathname.startsWith("/settings") }
+    { href: "/settings", label: "Settings", icon: Settings, active: pathname.startsWith("/settings") },
   ] as const;
 
   return (

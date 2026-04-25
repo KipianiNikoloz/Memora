@@ -3,7 +3,7 @@ import type { MemoryEntry, UserProfile } from "./types";
 export const demoUser: UserProfile = {
   id: "demo-user",
   email: "demo@memora.local",
-  defaultTone: "Wise"
+  defaultTone: "Wise",
 };
 
 export const seedEntries: MemoryEntry[] = [
@@ -21,7 +21,8 @@ export const seedEntries: MemoryEntry[] = [
     updatedAt: "2026-04-14T10:00:00.000Z",
     aiTone: "Motivational",
     aiTitle: "Growth and Learning of confidence",
-    aiResponse: "A Small Win at Work shows progress in motion. You met the moment, learned from it, and added another shelf to your own library."
+    aiResponse:
+      "A Small Win at Work shows progress in motion. You met the moment, learned from it, and added another shelf to your own library.",
   },
   {
     id: "entry-2",
@@ -37,7 +38,8 @@ export const seedEntries: MemoryEntry[] = [
     updatedAt: "2026-04-18T11:00:00.000Z",
     aiTone: "Wise",
     aiTitle: "Challenges of support",
-    aiResponse: "There is a quiet lesson in The Long Week: growth often becomes visible only after you return to the page."
+    aiResponse:
+      "There is a quiet lesson in The Long Week: growth often becomes visible only after you return to the page.",
   },
   {
     id: "entry-3",
@@ -53,6 +55,6 @@ export const seedEntries: MemoryEntry[] = [
     updatedAt: "2026-04-21T09:00:00.000Z",
     aiTone: "Humorous",
     aiTitle: "New Beginnings of routine",
-    aiResponse: "Tiny plot twist: Starting Fresh was not just a scene, it was evidence that you kept going."
-  }
+    aiResponse: "Tiny plot twist: Starting Fresh was not just a scene, it was evidence that you kept going.",
+  },
 ];

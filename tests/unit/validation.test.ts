@@ -10,7 +10,7 @@ describe("memory entry validation", () => {
       emotion: "Proud" as const,
       tags: "work, courage, work",
       lifePhase: "Growth and Learning" as const,
-      aiTone: "Wise" as const
+      aiTone: "Wise" as const,
     };
 
     expect(validateEntryDraft(draft).ok).toBe(true);
@@ -27,7 +27,7 @@ describe("memory entry validation", () => {
       emotion: "Happy",
       tags: "",
       lifePhase: "New Beginnings",
-      aiTone: "Wise"
+      aiTone: "Wise",
     });
 
     expect(result.ok).toBe(false);
@@ -47,7 +47,7 @@ describe("memory entry validation", () => {
       emotion: "Impossible" as never,
       tags: "",
       lifePhase: "Nowhere" as never,
-      aiTone: "Clinical" as never
+      aiTone: "Clinical" as never,
     });
 
     expect(result.ok).toBe(false);

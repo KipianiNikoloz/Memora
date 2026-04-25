@@ -45,7 +45,9 @@ The app runs in demo mode without live Supabase or AI credentials. Demo data is 
 ```bash
 npm run dev            # Start local app
 npm run build          # Production build
-npm run lint           # TypeScript check
+npm run lint           # ESLint static analysis
+npm run typecheck      # TypeScript check
+npm run format:check   # Prettier formatting check
 npm run test           # Unit and integration tests
 npm run test:coverage  # Coverage report
 npm run test:e2e       # Playwright browser tests
@@ -77,7 +79,7 @@ Start here:
 - [Testing Strategy](docs/testing.md)
 - [Demo Runbook](docs/demo-runbook.md)
 - [Feature Documentation](docs/features)
-- [Technical Architecture Deck](static/Memora_Technical_Deck.pdf)
+- [Technical Architecture Deck](static/Memora_Technical_Architecture_Deck.pdf)
 
 ## OpenSpec Workflow
 

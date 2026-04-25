@@ -1,5 +1,12 @@
 import { getRuntimeMode } from "./runtime-mode";
-import { type AiLibrarian, type AiProvider, type AiResult, type AiTask, type LibrarianRequest, mockAiLibrarian } from "./ai";
+import {
+  type AiLibrarian,
+  type AiProvider,
+  type AiResult,
+  type AiTask,
+  type LibrarianRequest,
+  mockAiLibrarian,
+} from "./ai";
 import { callGoogleGenAi } from "./ai-google";
 import { runAiWorkflow } from "./ai-workflow";
 
@@ -20,17 +27,23 @@ export function getAiRuntimeConfig(): AiRuntimeConfig {
     provider: getRuntimeMode() === "demo" ? "mock" : provider,
     model: process.env.MEMORA_AI_MODEL || "gemma-4-26b-a4b-it",
     timeoutMs: Number.isFinite(parsedTimeout) ? parsedTimeout : 8000,
-    apiKey
+    apiKey,
   };
 }
 
-export async function runAiLibrarianTask(task: AiTask, request: LibrarianRequest, config = getAiRuntimeConfig()): Promise<AiResult> {
+export async function runAiLibrarianTask(
+  task: AiTask,
+  request: LibrarianRequest,
+  config = getAiRuntimeConfig(),
+): Promise<AiResult> {
   const result = await runAiWorkflow(task, request, {
     provider: config.provider,
     model: config.model,
-    callModel: config.provider === "google" && config.apiKey
-      ? (prompt) => callGoogleGenAi({ prompt, model: config.model, apiKey: config.apiKey!, timeoutMs: config.timeoutMs })
-      : undefined
+    callModel:
+      config.provider === "google" && config.apiKey
+        ? (prompt) =>
+            callGoogleGenAi({ prompt, model: config.model, apiKey: config.apiKey!, timeoutMs: config.timeoutMs })
+        : undefined,
   });
 
   if (result.fallbackUsed && config.provider === "google") {
@@ -53,7 +66,7 @@ export function getAiLibrarian(): AiLibrarian {
     },
     async summarize(request) {
       return (await runAiLibrarianTask("summarize", request)).text;
-    }
+    },
   };
 }
 

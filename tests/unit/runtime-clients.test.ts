@@ -63,30 +63,71 @@ describe("AI client", () => {
   });
 
   it("returns the server AI response when the request succeeds", async () => {
-    vi.stubGlobal("fetch", vi.fn(async () => new Response(JSON.stringify({
-      text: "Server response",
-      provider: "google",
-      fallbackUsed: false
-    }), { status: 200 })));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(
+        async () =>
+          new Response(
+            JSON.stringify({
+              text: "Server response",
+              provider: "google",
+              fallbackUsed: false,
+            }),
+            { status: 200 },
+          ),
+      ),
+    );
     const { requestAiLibrarian } = await import("@/lib/ai-client");
 
-    await expect(requestAiLibrarian("reflect", {
-      entry: seedEntries[0],
-      tone: "Wise"
-    })).resolves.toEqual({
+    await expect(
+      requestAiLibrarian("reflect", {
+        entry: seedEntries[0],
+        tone: "Wise",
+      }),
+    ).resolves.toEqual({
       text: "Server response",
       provider: "google",
-      fallbackUsed: false
+      fallbackUsed: false,
     });
   });
 
   it("falls back to the mock librarian when the server request fails", async () => {
-    vi.stubGlobal("fetch", vi.fn(async () => new Response("Nope", { status: 503 })));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => new Response("Nope", { status: 503 })),
+    );
     const { requestAiLibrarian } = await import("@/lib/ai-client");
 
     const result = await requestAiLibrarian("suggestTitle", {
       entry: seedEntries[0],
-      tone: "Wise"
+      tone: "Wise",
+    });
+
+    expect(result.provider).toBe("mock");
+    expect(result.fallbackUsed).toBe(true);
+    expect(result.text.length).toBeGreaterThan(0);
+  });
+
+  it("falls back to the mock librarian when the server response is malformed", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(
+        async () =>
+          new Response(
+            JSON.stringify({
+              text: "Almost a response",
+              provider: "unexpected",
+              fallbackUsed: false,
+            }),
+            { status: 200 },
+          ),
+      ),
+    );
+    const { requestAiLibrarian } = await import("@/lib/ai-client");
+
+    const result = await requestAiLibrarian("reflect", {
+      entry: seedEntries[0],
+      tone: "Wise",
     });
 
     expect(result.provider).toBe("mock");

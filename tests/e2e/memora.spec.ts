@@ -12,7 +12,9 @@ test("user can create and revisit a memory with AI reflection", async ({ page })
   await page.goto("/new-entry");
   await page.getByLabel("Moment title").fill("A brave conversation");
   await page.getByText("Proud").click();
-  await page.getByLabel("What happened?").fill("I had a difficult conversation and stayed honest without being unkind.");
+  await page
+    .getByLabel("What happened?")
+    .fill("I had a difficult conversation and stayed honest without being unkind.");
   await page.getByLabel("What did I learn?").fill("Directness can be caring when it is grounded.");
   await page.getByLabel("Tags").fill("conversation, courage");
   const saveButton = page.getByRole("button", { name: "Save to library" });
@@ -46,8 +48,8 @@ test("user can issue a mocked XRPL milestone badge from insights", async ({ page
         address: "rDemoRecipient",
         seed: "sDemoSeed",
         network: "testnet",
-        createdAt: "2026-04-25T12:00:00.000Z"
-      })
+        createdAt: "2026-04-25T12:00:00.000Z",
+      }),
     });
   });
   await page.route("**/api/xrpl/badges/issue", async (route) => {
@@ -61,8 +63,8 @@ test("user can issue a mocked XRPL milestone badge from insights", async ({ page
         mintTxHash: "mint-hash",
         offerTxHash: "offer-hash",
         acceptTxHash: "accept-hash",
-        metadataUri: "data:application/json,%7B%7D"
-      })
+        metadataUri: "data:application/json,%7B%7D",
+      }),
     });
   });
 
@@ -86,7 +88,9 @@ test("library layout keeps cards and filters usable", async ({ page, isMobile })
   await expect(page.getByRole("link", { name: /A Small Win at Work/ })).toBeVisible();
 
   if (isMobile) {
-    const hasHorizontalOverflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
+    const hasHorizontalOverflow = await page.evaluate(
+      () => document.documentElement.scrollWidth > document.documentElement.clientWidth,
+    );
     expect(hasHorizontalOverflow).toBe(false);
   }
 });

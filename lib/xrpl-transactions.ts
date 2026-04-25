@@ -21,12 +21,16 @@ export function stringToHex(value: string): string {
   return Buffer.from(value, "utf8").toString("hex").toUpperCase();
 }
 
-export function buildMilestoneNFTokenMint({ account, metadataUri, taxon = XRPL_MILESTONE_BADGE_TAXON }: XrplMintFields) {
+export function buildMilestoneNFTokenMint({
+  account,
+  metadataUri,
+  taxon = XRPL_MILESTONE_BADGE_TAXON,
+}: XrplMintFields) {
   return {
     TransactionType: "NFTokenMint" as const,
     Account: account,
     NFTokenTaxon: taxon,
-    URI: stringToHex(metadataUri)
+    URI: stringToHex(metadataUri),
   };
 }
 
@@ -37,7 +41,7 @@ export function buildDestinationSellOffer({ account, nftokenId, destination }: X
     NFTokenID: nftokenId,
     Amount: "0",
     Destination: destination,
-    Flags: 1
+    Flags: 1,
   };
 }
 
@@ -45,7 +49,7 @@ export function buildAcceptSellOffer({ account, offerId }: XrplAcceptOfferFields
   return {
     TransactionType: "NFTokenAcceptOffer" as const,
     Account: account,
-    NFTokenSellOffer: offerId
+    NFTokenSellOffer: offerId,
   };
 }
 

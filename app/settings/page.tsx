@@ -34,7 +34,15 @@ export default function SettingsPage() {
           <p className="muted">You can still override tone on each interaction.</p>
           <div className="chip-row">
             {tones.map((tone) => (
-              <m.button className={`chip ${user?.defaultTone === tone ? "chip-active" : ""}`} disabled={savingTone === tone} key={tone} layout type="button" {...controlMotion} onClick={() => void chooseTone(tone as Tone)}>
+              <m.button
+                className={`chip ${user?.defaultTone === tone ? "chip-active" : ""}`}
+                disabled={savingTone === tone}
+                key={tone}
+                layout
+                type="button"
+                {...controlMotion}
+                onClick={() => void chooseTone(tone as Tone)}
+              >
                 {savingTone === tone ? "Saving..." : tone}
               </m.button>
             ))}
@@ -43,13 +51,25 @@ export default function SettingsPage() {
 
         <MotionPanel className="panel">
           <h3>Privacy</h3>
-          <p className="muted">Memories are private by default. Demo mode stores entries in this browser; Supabase mode enforces user ownership with RLS.</p>
-          <m.button className="button button-secondary" type="button" {...controlMotion} onClick={() => setExportText(exportEntries())}>Export entries</m.button>
+          <p className="muted">
+            Memories are private by default. Demo mode stores entries in this browser; Supabase mode enforces user
+            ownership with RLS.
+          </p>
+          <m.button
+            className="button button-secondary"
+            type="button"
+            {...controlMotion}
+            onClick={() => setExportText(exportEntries())}
+          >
+            Export entries
+          </m.button>
         </MotionPanel>
 
         <MotionPanel className="panel">
           <h3>Wellness boundary</h3>
-          <p className="muted">Memora supports reflection. It does not diagnose, treat, or replace emergency or clinical support.</p>
+          <p className="muted">
+            Memora supports reflection. It does not diagnose, treat, or replace emergency or clinical support.
+          </p>
         </MotionPanel>
       </MotionList>
 

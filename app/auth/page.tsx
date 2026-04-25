@@ -83,24 +83,70 @@ export default function AuthPage() {
           </div>
           <m.form onSubmit={submit}>
             <label className="field">
-              <span className="inline-icon-label"><Mail size={15} /> Email address</span>
+              <span className="inline-icon-label">
+                <Mail size={15} /> Email address
+              </span>
               <input className="input" value={email} onChange={(event) => setEmail(event.target.value)} />
             </label>
             <label className="field">
-              <span className="inline-icon-label"><Lock size={15} /> Password</span>
-              <input className="input" type="password" value={password} onChange={(event) => setPassword(event.target.value)} />
+              <span className="inline-icon-label">
+                <Lock size={15} /> Password
+              </span>
+              <input
+                className="input"
+                type="password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+              />
             </label>
             <AnimatePresence mode="wait">
-              {runtimeError ? <m.p className="error" key="runtime-error" initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>{runtimeError}</m.p> : null}
-              {error ? <m.p className="error" key="error" initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>{error}</m.p> : null}
-              {notice ? <m.p className="success" key="notice" initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>{notice}</m.p> : null}
+              {runtimeError ? (
+                <m.p
+                  className="error"
+                  key="runtime-error"
+                  initial={{ opacity: 0, y: 4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                >
+                  {runtimeError}
+                </m.p>
+              ) : null}
+              {error ? (
+                <m.p
+                  className="error"
+                  key="error"
+                  initial={{ opacity: 0, y: 4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                >
+                  {error}
+                </m.p>
+              ) : null}
+              {notice ? (
+                <m.p
+                  className="success"
+                  key="notice"
+                  initial={{ opacity: 0, y: 4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                >
+                  {notice}
+                </m.p>
+              ) : null}
             </AnimatePresence>
-            <m.button className="button button-primary" disabled={loading || submitting} type="submit" style={{ width: "100%" }} {...controlMotion}>
+            <m.button
+              className="button button-primary"
+              disabled={loading || submitting}
+              type="submit"
+              style={{ width: "100%" }}
+              {...controlMotion}
+            >
               {submitting ? "Opening your library..." : authMode === "sign-in" ? "Sign in" : "Create account"}
             </m.button>
           </m.form>
           <p className="muted" style={{ fontSize: 13 }}>
-            By continuing, you agree to our Terms and Privacy Policy. Demo mode uses local storage; production mode uses Supabase Auth and private database rows.
+            By continuing, you agree to our Terms and Privacy Policy. Demo mode uses local storage; production mode uses
+            Supabase Auth and private database rows.
           </p>
         </MotionList>
       </MotionPage>

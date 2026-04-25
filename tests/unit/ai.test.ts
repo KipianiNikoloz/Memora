@@ -19,9 +19,9 @@ describe("AI librarian", () => {
         lesson: "",
         emotion: "Stressed",
         lifePhase: "Challenges",
-        tags: []
+        tags: [],
       },
-      tone: "Wise"
+      tone: "Wise",
     });
     expect(response).toContain("emergency");
     expect(response).not.toContain("diagnose");
@@ -29,16 +29,22 @@ describe("AI librarian", () => {
 
   it("generates title, revisit, and low-data summaries for demo mode", async () => {
     await expect(mockAiLibrarian.suggestTitle({ tone: "Wise" })).resolves.toBe("A Chapter Worth Keeping");
-    await expect(mockAiLibrarian.suggestTitle({ entry: seedEntries[1], tone: "Wise" })).resolves.toContain("Challenges");
+    await expect(mockAiLibrarian.suggestTitle({ entry: seedEntries[1], tone: "Wise" })).resolves.toContain(
+      "Challenges",
+    );
     await expect(mockAiLibrarian.revisitPrompt({ entries: [], tone: "Wise" })).resolves.toContain("first shelf");
-    await expect(mockAiLibrarian.revisitPrompt({ entries: [seedEntries[2]], tone: "Humorous" })).resolves.toContain("Revisit");
-    await expect(mockAiLibrarian.summarize({ entries: [], tone: "Wise" })).resolves.toContain("shelves are still quiet");
+    await expect(mockAiLibrarian.revisitPrompt({ entries: [seedEntries[2]], tone: "Humorous" })).resolves.toContain(
+      "Revisit",
+    );
+    await expect(mockAiLibrarian.summarize({ entries: [], tone: "Wise" })).resolves.toContain(
+      "shelves are still quiet",
+    );
   });
 
   it("summarizes pressure-heavy libraries without scoring the user", async () => {
     const stressedEntries = [
       { ...seedEntries[1], id: "stress-1", emotion: "Stressed" as const },
-      { ...seedEntries[1], id: "stress-2", emotion: "Anxious" as const }
+      { ...seedEntries[1], id: "stress-2", emotion: "Anxious" as const },
     ];
 
     const summary = await mockAiLibrarian.summarize({ entries: stressedEntries, tone: "Wise" });

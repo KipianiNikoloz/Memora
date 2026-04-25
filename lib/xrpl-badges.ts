@@ -65,7 +65,7 @@ export function buildBadgeMetadata(entry: { emotion: string; lifePhase: string; 
     category: badgeCategory(entry),
     eventDate: entry.eventDate,
     issuer: "Memora",
-    version: "1"
+    version: "1",
   };
 }
 
@@ -84,7 +84,7 @@ export function createPendingBadge(entry: MemoryEntry, recipientAddress: string,
     recipientAddress,
     metadataUri: buildBadgeMetadataUri(entry),
     createdAt: timestamp,
-    updatedAt: timestamp
+    updatedAt: timestamp,
   };
 }
 

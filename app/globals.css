@@ -96,7 +96,9 @@ button {
   border: 1px solid rgba(227, 178, 71, 0.8);
   border-radius: 50%;
   background: #ffe7af;
-  transition: transform 220ms ease, box-shadow 220ms ease;
+  transition:
+    transform 220ms ease,
+    box-shadow 220ms ease;
 }
 
 .brand:hover .brand-mark {
@@ -148,7 +150,9 @@ button {
   content: "";
   opacity: 0;
   transform: scaleX(0.45);
-  transition: opacity 180ms ease, transform 180ms ease;
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease;
 }
 
 .nav-link:hover::after,
@@ -169,7 +173,12 @@ button {
   border-radius: 8px;
   padding: 10px 16px;
   font-weight: 800;
-  transition: transform 180ms ease, background 180ms ease, border-color 180ms ease, box-shadow 180ms ease, opacity 180ms ease;
+  transition:
+    transform 180ms ease,
+    background 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    opacity 180ms ease;
 }
 
 .button:hover {
@@ -356,9 +365,7 @@ button {
   overflow: hidden;
   border: 1px solid rgba(111, 36, 30, 0.2);
   border-radius: 8px;
-  background:
-    linear-gradient(135deg, rgba(255, 248, 234, 0.94), rgba(255, 231, 175, 0.42)),
-    rgba(255, 248, 234, 0.86);
+  background: linear-gradient(135deg, rgba(255, 248, 234, 0.94), rgba(255, 231, 175, 0.42)), rgba(255, 248, 234, 0.86);
   box-shadow: var(--shadow);
   padding: 20px;
 }
@@ -479,8 +486,7 @@ button {
   width: min(100%, 580px);
   height: 12px;
   border-radius: 999px;
-  background:
-    linear-gradient(90deg, rgba(111, 36, 30, 0.14), rgba(111, 36, 30, 0.42), rgba(111, 36, 30, 0.14));
+  background: linear-gradient(90deg, rgba(111, 36, 30, 0.14), rgba(111, 36, 30, 0.42), rgba(111, 36, 30, 0.14));
   content: "";
 }
 
@@ -567,7 +573,10 @@ button {
   padding: 12px;
   color: var(--burgundy);
   font-weight: 800;
-  transition: background 180ms ease, color 180ms ease, transform 180ms ease;
+  transition:
+    background 180ms ease,
+    color 180ms ease,
+    transform 180ms ease;
 }
 
 .sidebar a:hover {
@@ -600,7 +609,10 @@ button {
   background: rgba(255, 248, 234, 0.85);
   color: var(--ink);
   padding: 12px 14px;
-  transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    background 180ms ease;
 }
 
 .input:focus,
@@ -659,7 +671,13 @@ button {
   padding: 8px 12px;
   font-size: 13px;
   font-weight: 800;
-  transition: transform 180ms ease, background 180ms ease, border-color 180ms ease, color 180ms ease, box-shadow 180ms ease, opacity 180ms ease;
+  transition:
+    transform 180ms ease,
+    background 180ms ease,
+    border-color 180ms ease,
+    color 180ms ease,
+    box-shadow 180ms ease,
+    opacity 180ms ease;
 }
 
 .chip-active {
@@ -697,7 +715,10 @@ button {
   height: 100%;
   flex-direction: column;
   border-left: 10px solid var(--terracotta);
-  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
 }
 
 .entry-card > * {
