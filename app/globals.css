@@ -454,60 +454,66 @@ button {
   line-height: 1.45;
 }
 
-.tone-shelf {
+.about-books {
   position: relative;
-  display: flex;
-  min-height: 86px;
-  align-items: end;
-  justify-content: center;
-  gap: 10px;
-  padding: 4px 20px 12px;
+  display: grid;
+  max-width: 620px;
+  gap: 12px;
+  margin-top: clamp(26px, 5vw, 56px);
+  padding: 10px 0 20px;
 }
 
-.tone-book {
-  display: grid;
-  width: 46px;
-  align-items: end;
-  justify-items: center;
+.about-books::after {
+  display: block;
+  width: min(100%, 580px);
+  height: 12px;
+  border-radius: 999px;
+  background:
+    linear-gradient(90deg, rgba(111, 36, 30, 0.14), rgba(111, 36, 30, 0.42), rgba(111, 36, 30, 0.14));
+  content: "";
+}
+
+.about-book {
+  display: flex;
+  height: 54px;
+  align-items: center;
   border: 1px solid rgba(111, 36, 30, 0.22);
-  border-radius: 5px 5px 2px 2px;
+  border-radius: 8px 3px 3px 8px;
+  box-shadow: 0 14px 30px rgba(70, 26, 20, 0.1);
   color: #fff9ec;
-  font-size: 10px;
+  font-size: 13px;
   font-weight: 900;
-  min-height: 58px;
-  padding: 8px 4px;
-  text-align: center;
+  justify-content: flex-end;
+  padding: 0 18px;
   text-transform: uppercase;
 }
 
-.tone-book-motivational {
-  min-height: 72px;
-  background: var(--burgundy);
-  transform: rotate(-3deg);
+.about-book::before {
+  width: 10px;
+  height: 100%;
+  margin-right: auto;
+  border-right: 1px solid rgba(255, 249, 236, 0.28);
+  background: rgba(255, 249, 236, 0.18);
+  content: "";
 }
 
-.tone-book-humorous {
-  min-height: 52px;
+.about-book-long {
+  width: min(100%, 560px);
+  background: var(--burgundy);
+  transform: rotate(-1.2deg);
+}
+
+.about-book-medium {
+  width: min(88%, 500px);
   background: var(--gold);
   color: var(--ink);
-  transform: translateY(1px) rotate(2deg);
+  transform: translateX(34px) rotate(1.4deg);
 }
 
-.tone-book-wise {
-  min-height: 66px;
+.about-book-short {
+  width: min(76%, 430px);
   background: var(--teal);
-  transform: rotate(4deg);
-}
-
-.tone-shelf-line {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  height: 10px;
-  border-radius: 999px;
-  background:
-    linear-gradient(90deg, rgba(111, 36, 30, 0.18), rgba(111, 36, 30, 0.42), rgba(111, 36, 30, 0.18));
+  transform: translateX(70px) rotate(-0.8deg);
 }
 
 .muted {
