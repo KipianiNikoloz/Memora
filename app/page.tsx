@@ -80,6 +80,12 @@ export default function HomePage() {
               </m.div>
             </div>
             <p className="tone-note">You can change the tone any time in Settings.</p>
+            <div className="tone-shelf" aria-hidden="true">
+              <span className="tone-book tone-book-motivational">Lift</span>
+              <span className="tone-book tone-book-humorous">Light</span>
+              <span className="tone-book tone-book-wise">Quiet</span>
+              <span className="tone-shelf-line" />
+            </div>
           </MotionPanel>
         </div>
       </MotionPage>

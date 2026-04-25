@@ -454,6 +454,62 @@ button {
   line-height: 1.45;
 }
 
+.tone-shelf {
+  position: relative;
+  display: flex;
+  min-height: 86px;
+  align-items: end;
+  justify-content: center;
+  gap: 10px;
+  padding: 4px 20px 12px;
+}
+
+.tone-book {
+  display: grid;
+  width: 46px;
+  align-items: end;
+  justify-items: center;
+  border: 1px solid rgba(111, 36, 30, 0.22);
+  border-radius: 5px 5px 2px 2px;
+  color: #fff9ec;
+  font-size: 10px;
+  font-weight: 900;
+  min-height: 58px;
+  padding: 8px 4px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.tone-book-motivational {
+  min-height: 72px;
+  background: var(--burgundy);
+  transform: rotate(-3deg);
+}
+
+.tone-book-humorous {
+  min-height: 52px;
+  background: var(--gold);
+  color: var(--ink);
+  transform: translateY(1px) rotate(2deg);
+}
+
+.tone-book-wise {
+  min-height: 66px;
+  background: var(--teal);
+  transform: rotate(4deg);
+}
+
+.tone-shelf-line {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 10px;
+  border-radius: 999px;
+  background:
+    linear-gradient(90deg, rgba(111, 36, 30, 0.18), rgba(111, 36, 30, 0.42), rgba(111, 36, 30, 0.18));
+}
+
 .muted {
   color: var(--muted);
 }
