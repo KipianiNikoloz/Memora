@@ -36,25 +36,27 @@ function readJson<T>(key: string, fallback: T): T {
 export function MemoraProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [entries, setEntries] = useState<MemoryEntry[]>([]);
+  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
     const storedUser = readJson<UserProfile | null>(userKey, demoUser);
     const storedEntries = readJson<MemoryEntry[]>(entriesKey, seedEntries);
     setUser(storedUser);
     setEntries(storedEntries);
+    setHydrated(true);
   }, []);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
+    if (hydrated && typeof window !== "undefined") {
       window.localStorage.setItem(entriesKey, JSON.stringify(entries));
     }
-  }, [entries]);
+  }, [entries, hydrated]);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
+    if (hydrated && typeof window !== "undefined") {
       window.localStorage.setItem(userKey, JSON.stringify(user));
     }
-  }, [user]);
+  }, [hydrated, user]);
 
   const value = useMemo<MemoraContextValue>(() => ({
     user,
