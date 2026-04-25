@@ -193,7 +193,7 @@ describe("Supabase runtime provider", () => {
     expect(client.calls).toContain("auth.getSession");
     expect(client.calls).toContain("profiles.upsert");
     expect(client.calls).toContain("entries.select.order");
-    expect(context.entries[0].title).toBe("A production memory");
+    await waitFor(() => expect(context.entries[0]?.title).toBe("A production memory"));
     expect(setItem.mock.calls.filter(([key]) => String(key).startsWith("memora:"))).toHaveLength(0);
   });
 

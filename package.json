@@ -17,6 +17,8 @@
     "docs:check": "node scripts/check-docs.mjs"
   },
   "dependencies": {
+    "@google/genai": "^1.50.1",
+    "@langchain/langgraph": "^1.2.9",
     "@supabase/ssr": "^0.7.0",
     "@supabase/supabase-js": "^2.87.1",
     "lucide-react": "^0.556.0",

@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AppChrome } from "@/components/AppChrome";
 import { useMemora } from "@/components/MemoraClient";
-import { hasCrisisLikeInput, mockAiLibrarian } from "@/lib/ai";
+import { requestAiLibrarian } from "@/lib/ai-client";
 import { tones, type Tone } from "@/lib/types";
 
 export default function LibrarianPage() {
@@ -18,9 +18,25 @@ export default function LibrarianPage() {
     return entries.find((entry) => `${entry.title} ${entry.memory} ${entry.lesson} ${entry.tags.join(" ")}`.toLowerCase().includes(needle)) ?? entries[0];
   }, [entries, query]);
 
-  const response = hasCrisisLikeInput(query)
-    ? mockAiLibrarian.reflect({ entry: { title: "Support note", memory: query, lesson: "", emotion: "Stressed", lifePhase: "Challenges", tags: [] }, tone })
-    : mockAiLibrarian.revisitPrompt({ entries: matched ? [matched] : entries, tone });
+  const [response, setResponse] = useState("Your first shelf is waiting. Add one memory and the library can begin reflecting back.");
+
+  useEffect(() => {
+    let active = true;
+    const request = query.trim()
+      ? {
+        entry: { title: "Support note", memory: query, lesson: "", emotion: "Stressed" as const, lifePhase: "Challenges" as const, tags: [] },
+        tone
+      }
+      : { entries: matched ? [matched] : entries, tone };
+    const task = query.trim() ? "reflect" : "revisitPrompt";
+
+    void requestAiLibrarian(task, request).then((result) => {
+      if (active) setResponse(result.text);
+    });
+    return () => {
+      active = false;
+    };
+  }, [entries, matched, query, tone]);
 
   return (
     <AppChrome>

@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { mockAiLibrarian } from "@/lib/ai";
+import { requestAiLibrarian } from "@/lib/ai-client";
 import { demoUser, seedEntries } from "@/lib/demo-data";
 import { getRuntimeMode, type RuntimeMode } from "@/lib/runtime-mode";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
@@ -222,8 +222,12 @@ export function MemoraProvider({ children, runtimeMode, supabaseClient }: Memora
       setEntries([]);
     },
     async addEntry(entry: MemoryEntry) {
-      const aiTitle = mockAiLibrarian.suggestTitle({ entry, tone: entry.aiTone });
-      const aiResponse = mockAiLibrarian.reflect({ entry, tone: entry.aiTone });
+      const [aiTitleResult, aiResponseResult] = await Promise.all([
+        requestAiLibrarian("suggestTitle", { entry, tone: entry.aiTone }),
+        requestAiLibrarian("reflect", { entry, tone: entry.aiTone })
+      ]);
+      const aiTitle = aiTitleResult.text;
+      const aiResponse = aiResponseResult.text;
       const saved = { ...entry, aiTitle, aiResponse };
 
       if (mode === "supabase") {

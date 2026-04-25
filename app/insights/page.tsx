@@ -1,16 +1,27 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { AppChrome } from "@/components/AppChrome";
 import { useMemora } from "@/components/MemoraClient";
-import { mockAiLibrarian } from "@/lib/ai";
+import { requestAiLibrarian } from "@/lib/ai-client";
 import { buildInsights, moodLabel } from "@/lib/insights";
 
 export default function InsightsPage() {
   const { entries, user } = useMemora();
   const insights = buildInsights(entries);
-  const summary = mockAiLibrarian.summarize({ entries, tone: user?.defaultTone ?? "Wise" });
+  const [summary, setSummary] = useState("The shelves are still quiet. Add a few memories and Memora will help you notice patterns gently.");
   const max = Math.max(1, ...Object.values(insights.moodCounts));
+
+  useEffect(() => {
+    let active = true;
+    void requestAiLibrarian("summarize", { entries, tone: user?.defaultTone ?? "Wise" }).then((result) => {
+      if (active) setSummary(result.text);
+    });
+    return () => {
+      active = false;
+    };
+  }, [entries, user?.defaultTone]);
 
   return (
     <AppChrome>

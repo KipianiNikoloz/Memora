@@ -106,7 +106,7 @@ The intended production invariant is that memory entries are private by default 
 
 ## AI Librarian
 
-The MVP uses a deterministic mock AI provider so demos and tests do not depend on live AI credentials.
+The MVP uses a deterministic mock AI provider by default so demos and tests do not depend on live AI credentials. Production can opt into the server-side Google GenAI path by setting `MEMORA_AI_PROVIDER=google`, `MEMORA_AI_MODEL`, and either `GEMINI_API_KEY` or `GOOGLE_API_KEY`.
 
 Supported behavior:
 
