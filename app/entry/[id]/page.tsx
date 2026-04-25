@@ -2,13 +2,15 @@
 
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
 import { AppChrome } from "@/components/AppChrome";
 import { useMemora } from "@/components/MemoraClient";
 
 export default function EntryDetailPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
-  const { entries, deleteEntry } = useMemora();
+  const { entries, deleteEntry, error } = useMemora();
+  const [deleting, setDeleting] = useState(false);
   const entry = entries.find((item) => item.id === id);
 
   if (!entry) {
@@ -39,8 +41,23 @@ export default function EntryDetailPage() {
           </div>
           <div className="row" style={{ marginTop: 24 }}>
             <Link className="button button-secondary" href="/library">Back to library</Link>
-            <button className="button button-ghost" onClick={() => { deleteEntry(entry.id); router.push("/library"); }}>Delete entry</button>
+            <button
+              className="button button-ghost"
+              disabled={deleting}
+              onClick={async () => {
+                setDeleting(true);
+                try {
+                  await deleteEntry(entry.id);
+                  router.push("/library");
+                } finally {
+                  setDeleting(false);
+                }
+              }}
+            >
+              {deleting ? "Deleting..." : "Delete entry"}
+            </button>
           </div>
+          {error ? <p className="error">{error}</p> : null}
         </article>
         <aside className="panel">
           <h3>AI Librarian</h3>

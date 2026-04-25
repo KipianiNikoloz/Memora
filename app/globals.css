@@ -334,6 +334,11 @@ button {
   font-size: 13px;
 }
 
+.success {
+  color: #386b40;
+  font-size: 13px;
+}
+
 .chip-row {
   display: flex;
   flex-wrap: wrap;

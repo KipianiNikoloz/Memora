@@ -28,14 +28,20 @@ export default function NewEntryPage() {
     setDraft((current) => ({ ...current, [key]: value }));
   }
 
-  function submit(event: FormEvent) {
+  async function submit(event: FormEvent) {
     event.preventDefault();
     const result = validateEntryDraft(draft);
     setErrors(result.errors);
     if (!result.ok || !user) return;
     setSaving(true);
-    const entry = addEntry(createEntryFromDraft(draft, user.id));
-    router.push(`/entry/${entry.id}`);
+    try {
+      const entry = await addEntry(createEntryFromDraft(draft, user.id));
+      router.push(`/entry/${entry.id}`);
+    } catch (cause) {
+      setErrors({ title: cause instanceof Error ? cause.message : "Unable to save this entry." });
+    } finally {
+      setSaving(false);
+    }
   }
 
   return (

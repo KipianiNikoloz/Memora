@@ -6,13 +6,24 @@ import { useMemora } from "@/components/MemoraClient";
 import { tones, type Tone } from "@/lib/types";
 
 export default function SettingsPage() {
-  const { user, setDefaultTone, exportEntries } = useMemora();
+  const { error, user, setDefaultTone, exportEntries } = useMemora();
   const [exportText, setExportText] = useState("");
+  const [savingTone, setSavingTone] = useState<Tone | null>(null);
+
+  async function chooseTone(tone: Tone) {
+    setSavingTone(tone);
+    try {
+      await setDefaultTone(tone);
+    } finally {
+      setSavingTone(null);
+    }
+  }
 
   return (
     <AppChrome>
       <h1 className="app-title">Settings</h1>
       <p className="muted">Privacy, preferences, and boundaries for your library.</p>
+      {error ? <p className="error">{error}</p> : null}
 
       <div className="grid-3" style={{ marginTop: 22 }}>
         <section className="panel">
@@ -20,8 +31,8 @@ export default function SettingsPage() {
           <p className="muted">You can still override tone on each interaction.</p>
           <div className="chip-row">
             {tones.map((tone) => (
-              <button className={`chip ${user?.defaultTone === tone ? "chip-active" : ""}`} key={tone} type="button" onClick={() => setDefaultTone(tone as Tone)}>
-                {tone}
+              <button className={`chip ${user?.defaultTone === tone ? "chip-active" : ""}`} disabled={savingTone === tone} key={tone} type="button" onClick={() => void chooseTone(tone as Tone)}>
+                {savingTone === tone ? "Saving..." : tone}
               </button>
             ))}
           </div>
