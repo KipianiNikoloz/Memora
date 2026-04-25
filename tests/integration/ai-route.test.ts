@@ -52,4 +52,45 @@ describe("AI librarian route", () => {
 
     expect(response.status).toBe(400);
   });
+
+  it("rejects malformed JSON bodies", async () => {
+    vi.doMock("@/lib/ai-runtime", () => ({
+      runAiLibrarianTask: vi.fn()
+    }));
+    const { POST } = await import("@/app/api/ai/librarian/route");
+
+    const response = await POST(new Request("http://localhost/api/ai/librarian", {
+      method: "POST",
+      body: "{not-json"
+    }));
+
+    await expect(response.json()).resolves.toEqual({ error: "Invalid JSON body." });
+    expect(response.status).toBe(400);
+  });
+
+  it("passes valid entry arrays to summary tasks", async () => {
+    const runAiLibrarianTask = vi.fn(async () => ({
+      text: "Summary",
+      provider: "mock",
+      fallbackUsed: false
+    } satisfies AiResult));
+    vi.doMock("@/lib/ai-runtime", () => ({ runAiLibrarianTask }));
+    const { POST } = await import("@/app/api/ai/librarian/route");
+
+    const response = await POST(new Request("http://localhost/api/ai/librarian", {
+      method: "POST",
+      body: JSON.stringify({
+        task: "summarize",
+        entries: seedEntries,
+        tone: "Wise"
+      })
+    }));
+
+    expect(response.status).toBe(200);
+    expect(runAiLibrarianTask).toHaveBeenCalledWith("summarize", {
+      tone: "Wise",
+      entry: undefined,
+      entries: seedEntries
+    });
+  });
 });
