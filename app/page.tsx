@@ -1,5 +1,6 @@
 "use client";
 
+import { Sparkles } from "lucide-react";
 import Link from "next/link";
 import { LibraryIllustration } from "@/components/LibraryIllustration";
 import { MotionItem, MotionList, MotionPanel, MotionPage, controlMotion, m } from "@/components/Motion";
@@ -56,13 +57,29 @@ export default function HomePage() {
               never diagnostic or therapeutic.
             </p>
           </MotionItem>
-          <MotionPanel className="panel">
-            <h3>AI Librarian tones</h3>
-            <div className="chip-row">
-              <m.span className="chip chip-active" {...controlMotion}>Motivational</m.span>
-              <m.span className="chip" {...controlMotion}>Humorous</m.span>
-              <m.span className="chip" {...controlMotion}>Wise</m.span>
+          <MotionPanel className="tone-panel">
+            <div className="tone-panel-header">
+              <span className="tone-icon" aria-hidden="true"><Sparkles size={18} /></span>
+              <div>
+                <p className="tone-kicker">AI Librarian tones</p>
+                <h3>Choose the voice your memories answer in.</h3>
+              </div>
             </div>
+            <div className="tone-options" aria-label="AI Librarian tone examples">
+              <m.div className="tone-option tone-option-active" {...controlMotion}>
+                <span>Motivational</span>
+                <p>Turns progress into proof you can return to.</p>
+              </m.div>
+              <m.div className="tone-option" {...controlMotion}>
+                <span>Humorous</span>
+                <p>Keeps reflection light without making it shallow.</p>
+              </m.div>
+              <m.div className="tone-option" {...controlMotion}>
+                <span>Wise</span>
+                <p>Finds the quiet lesson inside the chapter.</p>
+              </m.div>
+            </div>
+            <p className="tone-note">You can change the tone any time in Settings.</p>
           </MotionPanel>
         </div>
       </MotionPage>

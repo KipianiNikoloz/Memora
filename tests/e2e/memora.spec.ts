@@ -15,7 +15,10 @@ test("user can create and revisit a memory with AI reflection", async ({ page })
   await page.getByLabel("What happened?").fill("I had a difficult conversation and stayed honest without being unkind.");
   await page.getByLabel("What did I learn?").fill("Directness can be caring when it is grounded.");
   await page.getByLabel("Tags").fill("conversation, courage");
-  await page.getByRole("button", { name: "Save to library" }).click();
+  const saveButton = page.getByRole("button", { name: "Save to library" });
+  await expect(saveButton).toBeEnabled();
+  await saveButton.click();
+  await expect(page).toHaveURL(/\/entry\//);
   await expect(page.getByText(/AI chapter title:/)).toBeVisible();
   await page.getByRole("link", { name: "Back to library" }).click();
   await expect(page.getByRole("heading", { name: "My Library" })).toBeVisible();
@@ -35,20 +38,42 @@ test("insights, settings, and librarian surfaces are reachable", async ({ page }
   await expect(page.getByRole("link", { name: "Open chapter" })).toBeVisible();
 });
 
+test("library layout keeps cards and filters usable", async ({ page, isMobile }) => {
+  await page.goto("/library");
+
+  await expect(page.getByRole("heading", { name: "My Library" })).toBeVisible();
+  await expect(page.getByPlaceholder("Search by title, lesson, or tag")).toBeVisible();
+  await expect(page.getByLabel("Emotion")).toBeVisible();
+  await expect(page.getByRole("link", { name: /A Small Win at Work/ })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "AI Librarian" })).toBeVisible();
+
+  await page.getByLabel("Emotion").selectOption("Proud");
+  await expect(page.getByRole("link", { name: /A Small Win at Work/ })).toBeVisible();
+
+  if (isMobile) {
+    const hasHorizontalOverflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
+    expect(hasHorizontalOverflow).toBe(false);
+  }
+});
+
 test("mobile header menu exposes app navigation", async ({ page, isMobile }) => {
   test.skip(!isMobile, "Mobile menu is only shown in mobile project.");
 
   await page.goto("/");
   await page.getByRole("button", { name: "Open navigation menu" }).click();
-  await expect(page.getByRole("link", { name: "New Entry" })).toBeVisible();
-  await expect(page.getByRole("link", { name: "AI Librarian" })).toBeVisible();
+  const mobilePanel = page.locator(".mobile-nav-panel");
+  await expect(mobilePanel.getByRole("link", { name: "Library", exact: true })).toHaveCount(1);
+  await expect(mobilePanel.getByRole("link", { name: "Insights", exact: true })).toHaveCount(1);
+  await expect(mobilePanel.getByRole("link", { name: "New Entry" })).toBeVisible();
+  await expect(mobilePanel.getByRole("link", { name: "AI Librarian" })).toBeVisible();
+  await expect(mobilePanel.getByRole("link", { name: "Settings" })).toBeVisible();
 
-  await page.getByRole("link", { name: "New Entry" }).click();
+  await mobilePanel.getByRole("link", { name: "New Entry" }).click();
   await expect(page.getByRole("heading", { name: "New Entry" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Open navigation menu" })).toBeVisible();
 
   await page.getByRole("button", { name: "Open navigation menu" }).click();
-  await expect(page.getByRole("link", { name: "Settings" })).toBeVisible();
+  await expect(page.locator(".mobile-nav-panel").getByRole("link", { name: "Settings" })).toBeVisible();
   await page.keyboard.press("Escape");
-  await expect(page.getByRole("link", { name: "Settings" })).toBeHidden();
+  await expect(page.locator(".mobile-nav-panel").getByRole("link", { name: "Settings" })).toBeHidden();
 });

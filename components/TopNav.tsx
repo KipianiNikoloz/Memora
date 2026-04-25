@@ -17,12 +17,14 @@ export function TopNav() {
     { href: "/insights", label: "Insights", active: pathname.startsWith("/insights") },
     { href: "/#about", label: "About", active: false }
   ] as const;
-  const appLinks = [
+  const mobileLinks = [
+    { href: "/#how", label: "How it works", active: pathname === "/" },
     { href: "/library", label: "Library", active: pathname.startsWith("/library") || pathname.startsWith("/entry") },
     { href: "/new-entry", label: "New Entry", active: pathname.startsWith("/new-entry") },
     { href: "/insights", label: "Insights", active: pathname.startsWith("/insights") },
     { href: "/librarian", label: "AI Librarian", active: pathname.startsWith("/librarian") },
-    { href: "/settings", label: "Settings", active: pathname.startsWith("/settings") }
+    { href: "/settings", label: "Settings", active: pathname.startsWith("/settings") },
+    { href: "/#about", label: "About", active: false }
   ] as const;
 
   useEffect(() => {
@@ -84,15 +86,8 @@ export function TopNav() {
             initial={{ opacity: 0, y: -8, height: 0 }}
             transition={{ duration: 0.22, ease: "easeOut" }}
           >
-            <div className="mobile-nav-section" aria-label="Site navigation">
-              {publicLinks.map((link) => (
-                <Link className={`mobile-nav-link ${link.active ? "mobile-nav-link-active" : ""}`} href={link.href} key={link.href} onClick={closeMenu}>
-                  {link.label}
-                </Link>
-              ))}
-            </div>
-            <div className="mobile-nav-section" aria-label="App navigation">
-              {appLinks.map((link) => (
+            <div className="mobile-nav-section" aria-label="Mobile navigation">
+              {mobileLinks.map((link) => (
                 <Link className={`mobile-nav-link ${link.active ? "mobile-nav-link-active" : ""}`} href={link.href} key={link.href} onClick={closeMenu}>
                   {link.label}
                 </Link>
