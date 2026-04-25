@@ -94,10 +94,10 @@ export default function LibraryPage() {
             <MotionPanel className="panel">
               <h3>AI Librarian</h3>
               <p className="muted">Find a memory, browse by theme, or let the librarian surprise you with a chapter worth revisiting.</p>
-              <div className="chip-row">
-                <m.span {...controlMotion}><Link className="chip" href="/librarian">Find a memory</Link></m.span>
-                <m.span {...controlMotion}><Link className="chip" href="/librarian">Browse by theme</Link></m.span>
-                <m.span {...controlMotion}><Link className="chip chip-active" href="/librarian">Surprise me</Link></m.span>
+              <div className="librarian-action-row">
+                <m.span {...controlMotion}><Link className="chip librarian-action" href="/librarian">Find a memory</Link></m.span>
+                <m.span {...controlMotion}><Link className="chip librarian-action" href="/librarian">Browse by theme</Link></m.span>
+                <m.span {...controlMotion}><Link className="chip chip-active librarian-action" href="/librarian">Surprise me</Link></m.span>
               </div>
             </MotionPanel>
           </MotionItem>

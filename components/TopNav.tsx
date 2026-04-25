@@ -14,8 +14,7 @@ export function TopNav() {
   const publicLinks = [
     { href: "/#how", label: "How it works", active: pathname === "/" },
     { href: "/library", label: "Library", active: pathname.startsWith("/library") || pathname.startsWith("/entry") },
-    { href: "/insights", label: "Insights", active: pathname.startsWith("/insights") },
-    { href: "/#about", label: "About", active: false }
+    { href: "/insights", label: "Insights", active: pathname.startsWith("/insights") }
   ] as const;
   const mobileLinks = [
     { href: "/#how", label: "How it works", active: pathname === "/" },
@@ -23,8 +22,7 @@ export function TopNav() {
     { href: "/new-entry", label: "New Entry", active: pathname.startsWith("/new-entry") },
     { href: "/insights", label: "Insights", active: pathname.startsWith("/insights") },
     { href: "/librarian", label: "AI Librarian", active: pathname.startsWith("/librarian") },
-    { href: "/settings", label: "Settings", active: pathname.startsWith("/settings") },
-    { href: "/#about", label: "About", active: false }
+    { href: "/settings", label: "Settings", active: pathname.startsWith("/settings") }
   ] as const;
 
   useEffect(() => {
