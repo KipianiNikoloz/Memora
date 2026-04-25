@@ -7,15 +7,24 @@ import { getRuntimeMode, type RuntimeMode } from "@/lib/runtime-mode";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import {
   deleteEntry as deleteSupabaseEntry,
+  loadBadges,
   insertEntry as insertSupabaseEntry,
   loadEntries,
   loadProfileForSession,
   updateEntry as updateSupabaseEntry,
   upsertProfile,
+  upsertBadge as upsertSupabaseBadge,
   type SupabaseClientLike,
   type SupabaseSession
 } from "@/lib/supabase/runtime-data";
 import type { MemoryEntry, Tone, UserProfile } from "@/lib/types";
+import {
+  createPendingBadge,
+  isMilestoneBadgeEligible,
+  type DemoBadgeWallet,
+  type MilestoneBadge,
+  type XrplBadgeIssueResult
+} from "@/lib/xrpl-badges";
 
 export type AuthMode = "sign-in" | "sign-up";
 
@@ -31,12 +40,17 @@ type MemoraContextValue = {
   error: string | null;
   user: UserProfile | null;
   entries: MemoryEntry[];
+  badges: MilestoneBadge[];
+  demoBadgeWallet: DemoBadgeWallet | null;
   signIn: (email: string, password: string, mode?: AuthMode) => Promise<AuthResult>;
   signOut: () => Promise<void>;
   addEntry: (entry: MemoryEntry) => Promise<MemoryEntry>;
   updateEntry: (entry: MemoryEntry) => Promise<void>;
   deleteEntry: (id: string) => Promise<void>;
   setDefaultTone: (tone: Tone) => Promise<void>;
+  createDemoBadgeWallet: () => Promise<DemoBadgeWallet>;
+  issueMilestoneBadge: (entryId: string) => Promise<MilestoneBadge>;
+  refreshBadgeStatus: (entryId: string) => Promise<MilestoneBadge | undefined>;
   exportEntries: () => string;
 };
 
@@ -44,6 +58,8 @@ const MemoraContext = createContext<MemoraContextValue | null>(null);
 
 const userKey = "memora:user";
 const entriesKey = "memora:entries";
+const badgesKey = "memora:xrpl-badges";
+const badgeWalletKey = "memora:xrpl-demo-wallet";
 
 function readJson<T>(key: string, fallback: T): T {
   if (typeof window === "undefined") return fallback;
@@ -70,6 +86,8 @@ export function MemoraProvider({ children, runtimeMode, supabaseClient }: Memora
   }, [mode, supabaseClient]);
   const [user, setUser] = useState<UserProfile | null>(null);
   const [entries, setEntries] = useState<MemoryEntry[]>([]);
+  const [badges, setBadges] = useState<MilestoneBadge[]>([]);
+  const [demoBadgeWallet, setDemoBadgeWallet] = useState<DemoBadgeWallet | null>(null);
   const [hydrated, setHydrated] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -78,6 +96,7 @@ export function MemoraProvider({ children, runtimeMode, supabaseClient }: Memora
     if (!session) {
       setUser(null);
       setEntries([]);
+      setBadges([]);
       setHydrated(true);
       setLoading(false);
       return;
@@ -97,13 +116,16 @@ export function MemoraProvider({ children, runtimeMode, supabaseClient }: Memora
         loadProfileForSession(supabase, session),
         loadEntries(supabase)
       ]);
+      const loadedBadges = await loadBadges(supabase);
       setUser(profile);
       setEntries(loadedEntries);
+      setBadges(loadedBadges);
     } catch (cause) {
       const message = cause instanceof Error ? cause.message : "Unable to load Supabase data.";
       setError(message);
       setUser(null);
       setEntries([]);
+      setBadges([]);
     } finally {
       setHydrated(true);
       setLoading(false);
@@ -114,8 +136,12 @@ export function MemoraProvider({ children, runtimeMode, supabaseClient }: Memora
     if (mode !== "demo") return;
     const storedUser = readJson<UserProfile | null>(userKey, demoUser);
     const storedEntries = readJson<MemoryEntry[]>(entriesKey, seedEntries);
+    const storedBadges = readJson<MilestoneBadge[]>(badgesKey, []);
+    const storedBadgeWallet = readJson<DemoBadgeWallet | null>(badgeWalletKey, null);
     setUser(storedUser);
     setEntries(storedEntries);
+    setBadges(storedBadges);
+    setDemoBadgeWallet(storedBadgeWallet);
     setHydrated(true);
     setLoading(false);
     setError(null);
@@ -163,9 +189,46 @@ export function MemoraProvider({ children, runtimeMode, supabaseClient }: Memora
 
   useEffect(() => {
     if (mode === "demo" && hydrated && typeof window !== "undefined") {
+      window.localStorage.setItem(badgesKey, JSON.stringify(badges));
+    }
+  }, [badges, hydrated, mode]);
+
+  useEffect(() => {
+    if (mode === "demo" && hydrated && typeof window !== "undefined") {
+      window.localStorage.setItem(badgeWalletKey, JSON.stringify(demoBadgeWallet));
+    }
+  }, [demoBadgeWallet, hydrated, mode]);
+
+  useEffect(() => {
+    if (mode === "demo" && hydrated && typeof window !== "undefined") {
       window.localStorage.setItem(userKey, JSON.stringify(user));
     }
   }, [hydrated, mode, user]);
+
+  const saveBadge = useCallback(async (badge: MilestoneBadge): Promise<MilestoneBadge> => {
+    if (mode === "supabase") {
+      if (!supabase) throw new Error("Supabase mode is enabled, but Supabase is not configured.");
+      const saved = await upsertSupabaseBadge(supabase, badge);
+      setBadges((current) => [saved, ...current.filter((item) => item.id !== saved.id)]);
+      return saved;
+    }
+
+    setBadges((current) => [badge, ...current.filter((item) => item.id !== badge.id)]);
+    return badge;
+  }, [mode, supabase]);
+
+  const createDemoBadgeWallet = useCallback(async (): Promise<DemoBadgeWallet> => {
+    if (demoBadgeWallet) return demoBadgeWallet;
+
+    const response = await fetch("/api/xrpl/badges/wallet", { method: "POST" });
+    if (!response.ok) {
+      throw new Error("Unable to create XRPL Testnet demo wallet.");
+    }
+
+    const wallet = await response.json() as DemoBadgeWallet;
+    setDemoBadgeWallet(wallet);
+    return wallet;
+  }, [demoBadgeWallet]);
 
   const value = useMemo<MemoraContextValue>(() => ({
     mode,
@@ -173,6 +236,8 @@ export function MemoraProvider({ children, runtimeMode, supabaseClient }: Memora
     error,
     user,
     entries: user ? entries.filter((entry) => entry.userId === user.id) : [],
+    badges: user ? badges.filter((badge) => badge.userId === user.id) : [],
+    demoBadgeWallet,
     async signIn(email: string, password: string, authMode: AuthMode = "sign-in") {
       setError(null);
 
@@ -220,6 +285,7 @@ export function MemoraProvider({ children, runtimeMode, supabaseClient }: Memora
       }
       setUser(null);
       setEntries([]);
+      setBadges([]);
     },
     async addEntry(entry: MemoryEntry) {
       const [aiTitleResult, aiResponseResult] = await Promise.all([
@@ -294,10 +360,83 @@ export function MemoraProvider({ children, runtimeMode, supabaseClient }: Memora
         }
       }
     },
+    createDemoBadgeWallet,
+    async refreshBadgeStatus(entryId: string) {
+      if (mode === "supabase" && supabase) {
+        const loadedBadges = await loadBadges(supabase);
+        setBadges(loadedBadges);
+        return loadedBadges.find((badge) => badge.entryId === entryId && badge.userId === user?.id);
+      }
+
+      return badges.find((badge) => badge.entryId === entryId && badge.userId === user?.id);
+    },
+    async issueMilestoneBadge(entryId: string) {
+      const entry = entries.find((item) => item.id === entryId && item.userId === user?.id);
+      if (!entry) throw new Error("Entry not found.");
+      if (!isMilestoneBadgeEligible(entry)) throw new Error("This entry is not eligible for a milestone badge.");
+
+      const existing = badges.find((badge) => badge.entryId === entry.id && badge.userId === entry.userId);
+      if (existing?.status === "issued") return existing;
+
+      const wallet = await createDemoBadgeWallet();
+      const pending = await saveBadge({
+        ...(existing ?? createPendingBadge(entry, wallet.address)),
+        status: "pending",
+        recipientAddress: wallet.address,
+        error: undefined,
+        updatedAt: new Date().toISOString()
+      });
+
+      try {
+        const response = await fetch("/api/xrpl/badges/issue", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            entry: {
+              id: entry.id,
+              emotion: entry.emotion,
+              lifePhase: entry.lifePhase,
+              eventDate: entry.eventDate
+            },
+            recipientAddress: wallet.address,
+            recipientSeed: wallet.seed
+          })
+        });
+        const payload = await response.json() as Partial<XrplBadgeIssueResult> & { error?: string };
+        if (!response.ok) {
+          throw new Error(payload.error ?? "Unable to issue XRPL badge.");
+        }
+
+        return saveBadge({
+          ...pending,
+          status: "issued",
+          issuerAddress: payload.issuerAddress,
+          recipientAddress: payload.recipientAddress ?? wallet.address,
+          nftokenId: payload.nftokenId,
+          offerId: payload.offerId,
+          mintTxHash: payload.mintTxHash,
+          offerTxHash: payload.offerTxHash,
+          acceptTxHash: payload.acceptTxHash,
+          metadataUri: payload.metadataUri ?? pending.metadataUri,
+          issuedAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          error: undefined
+        });
+      } catch (cause) {
+        const message = cause instanceof Error ? cause.message : "Unable to issue XRPL badge.";
+        setError(message);
+        return saveBadge({
+          ...pending,
+          status: "failed",
+          error: message,
+          updatedAt: new Date().toISOString()
+        });
+      }
+    },
     exportEntries() {
       return JSON.stringify(entries.filter((entry) => entry.userId === user?.id), null, 2);
     }
-  }), [entries, error, hydrateSupabaseSession, loading, mode, supabase, user]);
+  }), [badges, createDemoBadgeWallet, demoBadgeWallet, entries, error, hydrateSupabaseSession, loading, mode, saveBadge, supabase, user]);
 
   return <MemoraContext.Provider value={value}>{children}</MemoraContext.Provider>;
 }

@@ -2,9 +2,16 @@ import { act, render, screen, waitFor } from "@testing-library/react";
 import { useEffect } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { MemoraProvider, type AuthResult, useMemora } from "@/components/MemoraClient";
-import { mapMemoryEntryToRow, type MemoraProfileRow, type MemoryEntryRow } from "@/lib/supabase/mappers";
+import {
+  mapBadgeToUpsert,
+  mapMemoryEntryToRow,
+  type MemoraProfileRow,
+  type MemoryEntryRow,
+  type XrplMilestoneBadgeRow
+} from "@/lib/supabase/mappers";
 import type { SupabaseClientLike, SupabaseSession } from "@/lib/supabase/runtime-data";
 import type { MemoryEntry, Tone } from "@/lib/types";
+import type { MilestoneBadge } from "@/lib/xrpl-badges";
 
 type ContextValue = ReturnType<typeof useMemora>;
 
@@ -36,6 +43,7 @@ function entryFixture(overrides: Partial<MemoryEntry> = {}): MemoryEntry {
 class MockSupabaseClient implements SupabaseClientLike {
   profiles: MemoraProfileRow[] = [];
   entries: MemoryEntryRow[] = [];
+  badges: XrplMilestoneBadgeRow[] = [];
   calls: string[] = [];
   signUpReturnsSession = true;
   private currentSession: SupabaseSession;
@@ -73,7 +81,7 @@ class MockSupabaseClient implements SupabaseClientLike {
     }
   };
 
-  from(table: "memora_profiles" | "memory_entries") {
+  from(table: "memora_profiles" | "memory_entries" | "xrpl_milestone_badges") {
     if (table === "memora_profiles") {
       return {
         select: () => ({
@@ -91,6 +99,30 @@ class MockSupabaseClient implements SupabaseClientLike {
               const profile = row as MemoraProfileRow;
               this.profiles = [profile, ...this.profiles.filter((item) => item.id !== profile.id)];
               return { data: profile, error: null };
+            }
+          })
+        }),
+        insert: () => this.unsupported(),
+        update: () => this.unsupported(),
+        delete: () => this.unsupported()
+      };
+    }
+
+    if (table === "xrpl_milestone_badges") {
+      return {
+        select: () => ({
+          order: async () => {
+            this.calls.push("badges.select.order");
+            return { data: this.badges, error: null };
+          }
+        }),
+        upsert: (row: Record<string, unknown>) => ({
+          select: () => ({
+            single: async () => {
+              this.calls.push("badges.upsert");
+              const badge = row as XrplMilestoneBadgeRow;
+              this.badges = [badge, ...this.badges.filter((item) => item.id !== badge.id)];
+              return { data: badge, error: null };
             }
           })
         }),
@@ -193,6 +225,7 @@ describe("Supabase runtime provider", () => {
     expect(client.calls).toContain("auth.getSession");
     expect(client.calls).toContain("profiles.upsert");
     expect(client.calls).toContain("entries.select.order");
+    expect(client.calls).toContain("badges.select.order");
     await waitFor(() => expect(context.entries[0]?.title).toBe("A production memory"));
     expect(setItem.mock.calls.filter(([key]) => String(key).startsWith("memora:"))).toHaveLength(0);
   });
@@ -233,6 +266,60 @@ describe("Supabase runtime provider", () => {
 
     await waitFor(() => expect(screen.getByText("no-user")).toBeVisible());
     expect(client.calls).toContain("auth.signOut");
+  });
+
+  it("loads and updates Supabase badge state", async () => {
+    const client = new MockSupabaseClient(session);
+    client.entries = [mapMemoryEntryToRow(entryFixture()) as MemoryEntryRow];
+    const badge: MilestoneBadge = {
+      id: "badge-entry-1",
+      userId: "user-1",
+      entryId: "entry-1",
+      status: "failed",
+      recipientAddress: "rRecipient",
+      nftokenId: "00080000ABC",
+      metadataUri: "data:application/json,%7B%7D",
+      createdAt: "2026-04-25T12:00:00.000Z",
+      updatedAt: "2026-04-25T12:05:00.000Z"
+    };
+    client.badges = [mapBadgeToUpsert(badge) as XrplMilestoneBadgeRow];
+    let context = null as unknown as ContextValue;
+
+    await renderRuntime(client, (value) => {
+      context = value;
+    });
+
+    await waitFor(() => expect(context.badges[0]?.status).toBe("failed"));
+
+    vi.stubGlobal("fetch", vi.fn(async (url: string) => {
+      if (url === "/api/xrpl/badges/wallet") {
+        return new Response(JSON.stringify({
+          address: "rRecipient",
+          seed: "sSeed",
+          network: "testnet",
+          createdAt: "2026-04-25T12:00:00.000Z"
+        }), { status: 200 });
+      }
+      return new Response(JSON.stringify({
+        issuerAddress: "rIssuer",
+        recipientAddress: "rRecipient",
+        nftokenId: "00080000DEF",
+        offerId: "offer-2",
+        mintTxHash: "mint-2",
+        offerTxHash: "offer-2",
+        acceptTxHash: "accept-2",
+        metadataUri: "data:application/json,%7B%7D"
+      }), { status: 200 });
+    }));
+
+    await act(async () => {
+      await context.issueMilestoneBadge("entry-1");
+    });
+
+    expect(client.calls).toContain("badges.upsert");
+    expect(client.badges[0].status).toBe("issued");
+    expect(client.badges[0].nftoken_id).toBe("00080000DEF");
+    vi.unstubAllGlobals();
   });
 
   it("returns check-email when Supabase sign-up requires confirmation", async () => {
@@ -280,5 +367,50 @@ describe("demo runtime provider", () => {
     await waitFor(() => expect(context?.entries).toHaveLength(3));
     expect(setItem.mock.calls.some(([key]) => key === "memora:entries")).toBe(true);
     expect(setItem.mock.calls.some(([key]) => key === "memora:user")).toBe(true);
+  });
+
+  it("persists demo badge wallet and issued badge state to localStorage", async () => {
+    vi.stubGlobal("fetch", vi.fn(async (url: string) => {
+      if (url === "/api/xrpl/badges/wallet") {
+        return new Response(JSON.stringify({
+          address: "rDemoRecipient",
+          seed: "sDemoSeed",
+          network: "testnet",
+          createdAt: "2026-04-25T12:00:00.000Z"
+        }), { status: 200 });
+      }
+      return new Response(JSON.stringify({
+        issuerAddress: "rIssuer",
+        recipientAddress: "rDemoRecipient",
+        nftokenId: "00080000ABC",
+        offerId: "offer-1",
+        mintTxHash: "mint-hash",
+        offerTxHash: "offer-hash",
+        acceptTxHash: "accept-hash",
+        metadataUri: "data:application/json,%7B%7D"
+      }), { status: 200 });
+    }));
+    let context = null as unknown as ContextValue;
+
+    render(
+      <MemoraProvider runtimeMode="demo">
+        <ContextProbe onValue={(value) => {
+          context = value;
+        }} />
+      </MemoraProvider>
+    );
+
+    await screen.findByText("demo@memora.local");
+    await waitFor(() => expect(context.entries).toHaveLength(3));
+
+    await act(async () => {
+      await context.issueMilestoneBadge("entry-1");
+    });
+
+    const badges = JSON.parse(window.localStorage.getItem("memora:xrpl-badges") ?? "[]") as MilestoneBadge[];
+    const wallet = JSON.parse(window.localStorage.getItem("memora:xrpl-demo-wallet") ?? "null") as { address?: string } | null;
+    expect(badges[0]).toMatchObject({ status: "issued", nftokenId: "00080000ABC" });
+    expect(wallet?.address).toBe("rDemoRecipient");
+    vi.unstubAllGlobals();
   });
 });

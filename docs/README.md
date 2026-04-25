@@ -16,6 +16,7 @@ This index connects the product knowledge base, implementation docs, testing gui
 - [Library Explorer](features/library.md)
 - [AI Librarian](features/ai-librarian.md)
 - [Insights Dashboard](features/insights.md)
+- [XRPL Milestone Badges](features/xrpl-milestone-badges.md)
 - [Homepage and Design System](features/design-system.md)
 - [Settings, Privacy, and Safety](features/settings-privacy-safety.md)
 

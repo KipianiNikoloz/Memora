@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AppChrome } from "@/components/AppChrome";
 import { useMemora } from "@/components/MemoraClient";
+import { MilestoneBadgeAction } from "@/components/MilestoneBadgeAction";
 import { AnimatePresence, MotionItem, MotionList, MotionPanel, controlMotion, m } from "@/components/Motion";
 import { requestAiLibrarian } from "@/lib/ai-client";
 import { buildInsights, moodLabel } from "@/lib/insights";
@@ -68,7 +69,10 @@ export default function InsightsPage() {
         <MotionPanel className="panel">
           <h3>Milestone Highlights</h3>
           {insights.milestones.length ? insights.milestones.map((entry) => (
-            <m.p key={entry.id} layout {...controlMotion}><Link href={`/entry/${entry.id}`}>{entry.title}</Link></m.p>
+            <m.div className="milestone-badge-row" key={entry.id} layout {...controlMotion}>
+              <Link href={`/entry/${entry.id}`}>{entry.title}</Link>
+              <MilestoneBadgeAction entry={entry} compact />
+            </m.div>
           )) : <p className="muted">No milestone shelf yet. Proud and Milestones entries will appear here.</p>}
         </MotionPanel>
         <MotionPanel className="panel">

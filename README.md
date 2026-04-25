@@ -18,6 +18,7 @@ Implemented MVP surfaces:
 - AI Librarian mock provider with tone modes
 - Insights dashboard
 - Settings, privacy, and safety surfaces
+- XRPL Testnet milestone badge path for user-confirmed keepsakes
 - Supabase-ready helpers and RLS migration
 - Unit, integration, coverage, and Playwright E2E tests
 - Product, feature, architecture, testing, and demo documentation
@@ -168,6 +169,11 @@ Required Vercel production environment variables:
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 - `NEXT_PUBLIC_MEMORA_DEMO_MODE=false`
+
+Optional XRPL Testnet badge variables:
+
+- `XRPL_TESTNET_SERVER_URL`
+- `XRPL_TESTNET_ISSUER_SEED`
 
 This pipeline prepares and deploys the production infrastructure path. The current app state layer still uses the existing local/demo provider until a separate Supabase-backed app data flow change is implemented.
 

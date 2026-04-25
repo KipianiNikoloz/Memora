@@ -5,7 +5,9 @@ import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { AppChrome } from "@/components/AppChrome";
 import { useMemora } from "@/components/MemoraClient";
+import { MilestoneBadgeAction } from "@/components/MilestoneBadgeAction";
 import { MotionItem, MotionPanel, controlMotion, m } from "@/components/Motion";
+import { isMilestoneBadgeEligible } from "@/lib/xrpl-badges";
 
 export default function EntryDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -66,6 +68,11 @@ export default function EntryDetailPage() {
           <p className="muted">{entry.aiResponse}</p>
           <m.span {...controlMotion}><Link className="button button-secondary" href="/librarian">Ask for another reflection</Link></m.span>
         </MotionPanel>
+        {isMilestoneBadgeEligible(entry) ? (
+          <MotionPanel className="panel">
+            <MilestoneBadgeAction entry={entry} />
+          </MotionPanel>
+        ) : null}
       </MotionItem>
     </AppChrome>
   );

@@ -25,7 +25,8 @@
     "motion": "^12.38.0",
     "next": "^16.2.2",
     "react": "^19.2.1",
-    "react-dom": "^19.2.1"
+    "react-dom": "^19.2.1",
+    "xrpl": "^4.6.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.57.0",

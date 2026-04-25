@@ -1,4 +1,5 @@
 import type { Emotion, LifePhase, MemoryEntry, Tone, UserProfile } from "@/lib/types";
+import type { BadgeStatus, MilestoneBadge } from "@/lib/xrpl-badges";
 
 export type MemoryEntryRow = {
   id: string;
@@ -33,6 +34,30 @@ export type MemoraProfileUpsert = {
   id: string;
   email: string;
   default_tone: string;
+};
+
+export type XrplMilestoneBadgeRow = {
+  id: string;
+  user_id: string;
+  entry_id: string;
+  status: string;
+  recipient_address: string;
+  issuer_address: string | null;
+  nftoken_id: string | null;
+  offer_id: string | null;
+  mint_tx_hash: string | null;
+  offer_tx_hash: string | null;
+  accept_tx_hash: string | null;
+  metadata_uri: string;
+  issued_at: string | null;
+  created_at: string;
+  updated_at: string;
+  error: string | null;
+};
+
+export type XrplMilestoneBadgeUpsert = Omit<XrplMilestoneBadgeRow, "created_at" | "updated_at"> & {
+  created_at?: string;
+  updated_at?: string;
 };
 
 export function mapMemoryEntryRow(row: MemoryEntryRow): MemoryEntry {
@@ -86,5 +111,47 @@ export function mapProfileToUpsert(profile: UserProfile): MemoraProfileUpsert {
     id: profile.id,
     email: profile.email,
     default_tone: profile.defaultTone
+  };
+}
+
+export function mapBadgeRow(row: XrplMilestoneBadgeRow): MilestoneBadge {
+  return {
+    id: row.id,
+    userId: row.user_id,
+    entryId: row.entry_id,
+    status: row.status as BadgeStatus,
+    recipientAddress: row.recipient_address,
+    issuerAddress: row.issuer_address ?? undefined,
+    nftokenId: row.nftoken_id ?? undefined,
+    offerId: row.offer_id ?? undefined,
+    mintTxHash: row.mint_tx_hash ?? undefined,
+    offerTxHash: row.offer_tx_hash ?? undefined,
+    acceptTxHash: row.accept_tx_hash ?? undefined,
+    metadataUri: row.metadata_uri,
+    issuedAt: row.issued_at ?? undefined,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+    error: row.error ?? undefined
+  };
+}
+
+export function mapBadgeToUpsert(badge: MilestoneBadge): XrplMilestoneBadgeUpsert {
+  return {
+    id: badge.id,
+    user_id: badge.userId,
+    entry_id: badge.entryId,
+    status: badge.status,
+    recipient_address: badge.recipientAddress,
+    issuer_address: badge.issuerAddress ?? null,
+    nftoken_id: badge.nftokenId ?? null,
+    offer_id: badge.offerId ?? null,
+    mint_tx_hash: badge.mintTxHash ?? null,
+    offer_tx_hash: badge.offerTxHash ?? null,
+    accept_tx_hash: badge.acceptTxHash ?? null,
+    metadata_uri: badge.metadataUri,
+    issued_at: badge.issuedAt ?? null,
+    created_at: badge.createdAt,
+    updated_at: badge.updatedAt,
+    error: badge.error ?? null
   };
 }

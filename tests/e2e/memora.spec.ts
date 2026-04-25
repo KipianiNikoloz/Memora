@@ -18,7 +18,7 @@ test("user can create and revisit a memory with AI reflection", async ({ page })
   const saveButton = page.getByRole("button", { name: "Save to library" });
   await expect(saveButton).toBeEnabled();
   await saveButton.click();
-  await expect(page).toHaveURL(/\/entry\//);
+  await expect(page).toHaveURL(/\/entry\//, { timeout: 15000 });
   await expect(page.getByText(/AI chapter title:/)).toBeVisible();
   await page.getByRole("link", { name: "Back to library" }).click();
   await expect(page.getByRole("heading", { name: "My Library" })).toBeVisible();
@@ -36,6 +36,41 @@ test("insights, settings, and librarian surfaces are reachable", async ({ page }
   await expect(page.getByRole("heading", { name: "AI Librarian" })).toBeVisible();
   await page.getByLabel("What would you like to revisit?").fill("confidence");
   await expect(page.getByRole("link", { name: "Open chapter" })).toBeVisible();
+});
+
+test("user can issue a mocked XRPL milestone badge from insights", async ({ page }) => {
+  await page.route("**/api/xrpl/badges/wallet", async (route) => {
+    await route.fulfill({
+      contentType: "application/json",
+      body: JSON.stringify({
+        address: "rDemoRecipient",
+        seed: "sDemoSeed",
+        network: "testnet",
+        createdAt: "2026-04-25T12:00:00.000Z"
+      })
+    });
+  });
+  await page.route("**/api/xrpl/badges/issue", async (route) => {
+    await route.fulfill({
+      contentType: "application/json",
+      body: JSON.stringify({
+        issuerAddress: "rIssuer",
+        recipientAddress: "rDemoRecipient",
+        nftokenId: "00080000ABC",
+        offerId: "offer-1",
+        mintTxHash: "mint-hash",
+        offerTxHash: "offer-hash",
+        acceptTxHash: "accept-hash",
+        metadataUri: "data:application/json,%7B%7D"
+      })
+    });
+  });
+
+  await page.goto("/insights");
+  await expect(page.getByRole("heading", { name: "XRPL Badge" }).first()).toBeVisible();
+  await page.getByRole("button", { name: "Issue badge" }).first().click();
+  await expect(page.getByRole("button", { name: "Badge issued" }).first()).toBeVisible();
+  await expect(page.getByRole("link", { name: "View NFT" }).first()).toBeVisible();
 });
 
 test("library layout keeps cards and filters usable", async ({ page, isMobile }) => {

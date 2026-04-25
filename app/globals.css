@@ -726,6 +726,55 @@ button {
   overflow: hidden;
 }
 
+.milestone-badge-row,
+.badge-action {
+  display: grid;
+  gap: 12px;
+}
+
+.milestone-badge-row {
+  padding-block: 10px;
+  border-bottom: 1px solid var(--line);
+}
+
+.milestone-badge-row:last-child {
+  border-bottom: 0;
+}
+
+.badge-action h3 {
+  margin-bottom: 4px;
+}
+
+.badge-action-compact {
+  gap: 8px;
+}
+
+.badge-action-compact h3 {
+  font-size: 15px;
+}
+
+.badge-action-compact .button {
+  width: max-content;
+  min-height: 36px;
+  padding: 8px 12px;
+  font-size: 13px;
+}
+
+.badge-wallet {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  font-size: 12px;
+}
+
+.badge-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  color: var(--burgundy);
+  font-weight: 800;
+  font-size: 14px;
+}
+
 .motion-page {
   width: min(100%, 1180px);
   min-width: 0;

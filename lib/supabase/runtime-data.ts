@@ -1,12 +1,16 @@
 import type { MemoryEntry, UserProfile } from "@/lib/types";
 import {
+  mapBadgeRow,
+  mapBadgeToUpsert,
   mapMemoryEntryRow,
   mapMemoryEntryToRow,
   mapProfileRow,
   mapProfileToUpsert,
   type MemoraProfileRow,
-  type MemoryEntryRow
+  type MemoryEntryRow,
+  type XrplMilestoneBadgeRow
 } from "./mappers";
+import type { MilestoneBadge } from "@/lib/xrpl-badges";
 
 type SupabaseError = {
   message: string;
@@ -38,7 +42,7 @@ export type SupabaseClientLike = {
   };
   // Supabase query builders are thenable fluent objects. The runtime helpers
   // below own the exact operations; tests provide a narrow fake for those calls.
-  from: (table: "memora_profiles" | "memory_entries") => any;
+  from: (table: "memora_profiles" | "memory_entries" | "xrpl_milestone_badges") => any;
 };
 
 function assertNoError<T>(result: { data: T | null; error: SupabaseError | null }): T {
@@ -124,4 +128,23 @@ export async function deleteEntry(client: SupabaseClientLike, id: string): Promi
   if (result.error) {
     throw new Error(result.error.message);
   }
+}
+
+export async function loadBadges(client: SupabaseClientLike): Promise<MilestoneBadge[]> {
+  const result = await client
+    .from("xrpl_milestone_badges")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  return assertNoError<XrplMilestoneBadgeRow[]>(result).map(mapBadgeRow);
+}
+
+export async function upsertBadge(client: SupabaseClientLike, badge: MilestoneBadge): Promise<MilestoneBadge> {
+  const result = await client
+    .from("xrpl_milestone_badges")
+    .upsert(mapBadgeToUpsert(badge))
+    .select("*")
+    .single();
+
+  return mapBadgeRow(assertNoError<XrplMilestoneBadgeRow>(result));
 }
