@@ -140,6 +140,37 @@ npm run test:coverage
 npm run docs:check
 ```
 
+## CI/CD
+
+GitHub Actions now runs the full quality gate for pull requests to `main` and pushes to `main`:
+
+```bash
+npm run lint
+npm run test:coverage
+npm run docs:check
+npm run build
+npm run test:e2e
+```
+
+When CI succeeds on `main`, the production deployment workflow applies Supabase migrations and deploys prebuilt Vercel production artifacts.
+
+Required GitHub repository secrets:
+
+- `SUPABASE_ACCESS_TOKEN`
+- `SUPABASE_DB_PASSWORD`
+- `SUPABASE_PROJECT_ID`
+- `VERCEL_TOKEN`
+- `VERCEL_ORG_ID`
+- `VERCEL_PROJECT_ID`
+
+Required Vercel production environment variables:
+
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `NEXT_PUBLIC_MEMORA_DEMO_MODE=false`
+
+This pipeline prepares and deploys the production infrastructure path. The current app state layer still uses the existing local/demo provider until a separate Supabase-backed app data flow change is implemented.
+
 ## Demo Flow
 
 For a reliable hackathon demo:

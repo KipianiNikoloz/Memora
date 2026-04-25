@@ -1,5 +1,6 @@
 node_modules
 .next
+.vercel
 coverage
 playwright-report
 test-results
@@ -7,3 +8,7 @@ tsconfig.tsbuildinfo
 .env
 .env.local
 dist
+supabase/.temp
+
+.vercel
+.env*.local
