@@ -480,12 +480,8 @@ button {
   border: 1px solid rgba(111, 36, 30, 0.22);
   border-radius: 8px 3px 3px 8px;
   box-shadow: 0 14px 30px rgba(70, 26, 20, 0.1);
-  color: #fff9ec;
-  font-size: 13px;
-  font-weight: 900;
   justify-content: flex-end;
-  padding: 0 18px;
-  text-transform: uppercase;
+  padding: 0 18px 0 0;
 }
 
 .about-book::before {
@@ -494,6 +490,15 @@ button {
   margin-right: auto;
   border-right: 1px solid rgba(255, 249, 236, 0.28);
   background: rgba(255, 249, 236, 0.18);
+  content: "";
+}
+
+.about-book::after {
+  width: 36px;
+  height: 2px;
+  border-radius: 999px;
+  background: rgba(255, 249, 236, 0.34);
+  box-shadow: 0 9px 0 rgba(255, 249, 236, 0.2);
   content: "";
 }
 
@@ -506,8 +511,17 @@ button {
 .about-book-medium {
   width: min(88%, 500px);
   background: var(--gold);
-  color: var(--ink);
   transform: translateX(34px) rotate(1.4deg);
+}
+
+.about-book-medium::before {
+  border-right-color: rgba(53, 21, 17, 0.18);
+  background: rgba(53, 21, 17, 0.1);
+}
+
+.about-book-medium::after {
+  background: rgba(53, 21, 17, 0.26);
+  box-shadow: 0 9px 0 rgba(53, 21, 17, 0.16);
 }
 
 .about-book-short {

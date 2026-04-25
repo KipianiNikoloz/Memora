@@ -57,9 +57,9 @@ export default function HomePage() {
               never diagnostic or therapeutic.
             </p>
             <div className="about-books" aria-hidden="true">
-              <span className="about-book about-book-long">Motivational</span>
-              <span className="about-book about-book-medium">Humorous</span>
-              <span className="about-book about-book-short">Wise</span>
+              <span className="about-book about-book-long" />
+              <span className="about-book about-book-medium" />
+              <span className="about-book about-book-short" />
             </div>
           </MotionItem>
           <MotionPanel className="tone-panel">
