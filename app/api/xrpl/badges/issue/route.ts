@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { Client, Wallet } from "xrpl";
-import { buildBadgeMetadataUri, isMilestoneBadgeEligible, XRPL_TESTNET_SERVER } from "@/lib/xrpl-badges";
+import { buildBadgeMetadataUri, isMilestoneBadgeEligible } from "@/lib/xrpl-badges";
+import { getXrplIssuerSeed, getXrplServerUrl, xrplIssuerSeedEnvNames } from "@/lib/xrpl-config";
 import {
   assertValidatedSuccess,
   buildAcceptSellOffer,
@@ -55,9 +56,9 @@ async function latestIssuerNftokenId(client: Client, issuerAddress: string, meta
 }
 
 export async function POST(request: Request) {
-  const issuerSeed = process.env.XRPL_TESTNET_ISSUER_SEED;
+  const issuerSeed = getXrplIssuerSeed();
   if (!issuerSeed) {
-    return jsonError("XRPL Testnet issuer seed is not configured.", 503);
+    return jsonError(`XRPL Testnet issuer seed is not configured. Set one of: ${xrplIssuerSeedEnvNames().join(", ")}.`, 503);
   }
 
   let body: IssueRequest;
@@ -92,7 +93,7 @@ export async function POST(request: Request) {
     eventDate: entry.eventDate
   });
 
-  const client = new Client(process.env.XRPL_TESTNET_SERVER_URL ?? XRPL_TESTNET_SERVER);
+  const client = new Client(getXrplServerUrl());
   try {
     await client.connect();
     await ensureTestnetAccount(client, recipient);

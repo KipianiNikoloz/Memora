@@ -176,7 +176,10 @@ Required Vercel production environment variables:
 Optional XRPL Testnet badge variables:
 
 - `XRPL_TESTNET_SERVER_URL`
-- `XRPL_TESTNET_ISSUER_SEED`
+- `XRPL_TESTNET_ISSUER_SEED` (preferred)
+- `XRPL_TESTNET_SEED` or `XRPL_ISSUER_SEED` (accepted aliases)
+
+After adding or changing Vercel environment variables, redeploy the Production environment so the serverless API route receives the updated runtime values.
 
 This pipeline prepares and deploys the production infrastructure path. The current app state layer still uses the existing local/demo provider until a separate Supabase-backed app data flow change is implemented.
 
