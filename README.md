@@ -4,6 +4,8 @@ Every life deserves a library.
 
 Memora is a personal reflection platform that turns meaningful life moments into structured chapters users can revisit. It is built around a calm library metaphor: memories become entries, emotional tags become categories, life phases become shelves, and the AI Librarian offers supportive reflection without becoming clinical advice.
 
+Deployed app: [memora-brown.vercel.app](https://memora-brown.vercel.app)
+
 ## Current Status
 
 This repository contains a hackathon-ready MVP implementation plus a full OpenSpec-driven project plan.
@@ -75,6 +77,7 @@ Start here:
 - [Testing Strategy](docs/testing.md)
 - [Demo Runbook](docs/demo-runbook.md)
 - [Feature Documentation](docs/features)
+- [Technical Architecture Deck](static/Memora_Technical_Deck.pdf)
 
 ## OpenSpec Workflow
 

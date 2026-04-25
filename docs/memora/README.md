@@ -6,6 +6,7 @@ This knowledge base is the persistent product record for future implementation. 
 
 - `static/Report.pdf`: project vision, problem, solution, AI librarian concept, use cases, and future potential.
 - `static/ui/memora-ui1.png` through `static/ui/memora-ui10.png`: personas, journeys, information architecture, visual direction, components, product screens, states, and constraints.
+- `static/Memora_Technical_Deck.pdf`: engineering onboarding deck covering architecture, runtime modes, data, AI, Supabase, XRPL, tests, deployment, and docs.
 
 ## Navigation
 
